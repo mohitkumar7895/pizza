@@ -28,11 +28,23 @@ export type OrderItemDTO = {
 
 export type OrderDTO = {
   _id: string;
+  /** Public order id for tracking URL */
+  orderNumber?: string;
+  customerName?: string;
+  customerPhone?: string;
+  customerAddress?: string;
   items: OrderItemDTO[];
   totalAmount: number;
   status: OrderStatus;
   createdAt?: string;
   updatedAt?: string;
+};
+
+export type PlaceOrderPayload = {
+  items: OrderItemDTO[];
+  customerName: string;
+  customerPhone: string;
+  customerAddress: string;
 };
 
 export type CategoryDTO = {

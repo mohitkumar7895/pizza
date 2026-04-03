@@ -50,8 +50,8 @@ export function HeroBanner({ images }: Props) {
               key={`${u}-${i}`}
               className="box-border w-full shrink-0 grow-0 basis-full snap-start flex-[0_0_100%]"
             >
-              <div className="overflow-hidden rounded-2xl bg-neutral-100 shadow-[0_12px_40px_-16px_rgba(230,0,0,0.12)]">
-                <div className="relative aspect-[21/9] w-full min-h-[132px] sm:min-h-[160px]">
+              <div className="overflow-hidden rounded-2xl bg-[#faf8f5]">
+                <div className="relative aspect-[28/9] w-full min-h-[96px]">
                   <Image
                     src={u}
                     alt=""
@@ -87,9 +87,8 @@ export function HeroBanner({ images }: Props) {
 
       {/* Tablet & up: grid */}
       <div className="hidden sm:block">
-        <div className="rounded-2xl bg-white p-2 shadow-[0_12px_40px_-16px_rgba(230,0,0,0.12)] sm:rounded-3xl sm:p-2.5 md:p-3.5">
-          <div
-            className={`grid gap-2.5 sm:gap-3 md:gap-4 ${
+        <div
+          className={`grid gap-2.5 sm:gap-3 md:gap-4 ${
               count === 1
                 ? "grid-cols-1"
                 : count === 2
@@ -103,9 +102,9 @@ export function HeroBanner({ images }: Props) {
               return (
                 <div
                   key={i}
-                  className="relative w-full overflow-hidden rounded-xl bg-neutral-100 sm:rounded-2xl"
+                  className="relative w-full overflow-hidden rounded-xl bg-[#faf8f5] sm:rounded-2xl"
                 >
-                  <div className="relative aspect-[16/10] w-full min-h-[110px] sm:aspect-[2/1] sm:min-h-0 md:aspect-[21/9]">
+                  <div className="relative aspect-[21/9] w-full min-h-[88px] sm:aspect-[24/9] sm:min-h-0 md:aspect-[28/9]">
                     <Image
                       src={u}
                       alt=""
@@ -119,7 +118,6 @@ export function HeroBanner({ images }: Props) {
                 </div>
               );
             })}
-          </div>
         </div>
       </div>
     </section>

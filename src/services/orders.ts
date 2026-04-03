@@ -1,8 +1,20 @@
-import type { OrderDTO, OrderItemDTO, OrderStatus } from "@/types";
+import type {
+  OrderDTO,
+  OrderItemDTO,
+  OrderStatus,
+  PlaceOrderPayload,
+} from "@/types";
 import { http } from "./http";
 
-export async function placeOrder(items: OrderItemDTO[]): Promise<OrderDTO> {
-  const { data } = await http.post<OrderDTO>("/api/orders", { items });
+export async function placeOrder(payload: PlaceOrderPayload): Promise<OrderDTO> {
+  const { data } = await http.post<OrderDTO>("/api/orders", payload);
+  return data;
+}
+
+export async function fetchOrderByNumber(orderNumber: string): Promise<OrderDTO> {
+  const { data } = await http.get<OrderDTO>(
+    `/api/orders/track/${encodeURIComponent(orderNumber)}`
+  );
   return data;
 }
 

@@ -38,45 +38,45 @@ export function ProductCard({ product, onAdd }: Props) {
 
   return (
     <article
-      className="group flex overflow-hidden rounded-[20px] shadow-[0_10px_36px_-14px_rgba(0,0,0,0.2)] ring-1 ring-black/5 transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_16px_44px_-12px_rgba(227,0,0,0.18)]"
+      className="group flex items-stretch overflow-hidden rounded-[16px] border border-neutral-200/90 bg-white shadow-[0_5px_20px_-10px_rgba(0,0,0,0.1)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_10px_26px_-12px_rgba(227,0,0,0.12)]"
     >
-      {/* Left: white panel + image (fixed box so Next/Image fill always works) */}
-      <div className="flex w-[32%] min-w-[6.5rem] shrink-0 flex-col items-center justify-center bg-white px-2 py-3 sm:w-[35%] sm:min-w-[7.5rem] sm:px-3 sm:py-4">
-        <div className="relative h-[5.25rem] w-[5.25rem] shrink-0 overflow-hidden rounded-2xl bg-neutral-100 sm:h-28 sm:w-28">
+      {/* Left: larger image, fills strip height */}
+      <div className="flex w-[34%] min-w-[5.75rem] shrink-0 items-center justify-center bg-white px-1 py-1 sm:min-w-[6rem] sm:px-1.5 sm:py-1.5 md:w-[32%]">
+        <div className="relative aspect-square w-full max-w-[5.5rem] overflow-hidden rounded-lg bg-neutral-100 sm:max-w-[6rem] md:max-w-[6.25rem]">
           <Image
             src={src}
             alt={product.name}
             fill
-            className="object-cover transition duration-500 group-hover:scale-105"
-            sizes="112px"
+            className="object-cover object-center transition duration-500 group-hover:scale-[1.03]"
+            sizes="(max-width:640px) 88px, (max-width:1024px) 96px, 100px"
             unoptimized={imgUnopt}
           />
         </div>
       </div>
 
-      {/* Right: cream panel + details */}
-      <div className="flex min-w-0 flex-1 flex-col justify-between gap-2 bg-[#F9F9F0] p-3 text-neutral-900 sm:gap-3 sm:p-4">
+      {/* Right: yellow panel — title + desc; bottom row = ₹ | Add */}
+      <div className="flex min-w-0 flex-1 flex-col justify-center gap-0 bg-[#FFEFD5] py-1 pl-1.5 pr-1.5 sm:py-1.5 sm:pl-2 sm:pr-2">
         <div className="min-w-0">
-          <div className="flex items-start gap-2">
-            <span className="mt-0.5 shrink-0">
+          <div className="flex items-start gap-1">
+            <span className="mt-px shrink-0">
               {product.isVeg ? <VegIcon /> : <NonVegIcon />}
             </span>
-            <h3 className="font-body text-[0.95rem] font-bold leading-snug text-[#E30000] sm:text-base">
+            <h3 className="line-clamp-2 font-body text-[0.75rem] font-bold leading-[1.15] text-[#E30000] sm:text-[0.8125rem]">
               {product.name}
             </h3>
           </div>
-          <p className="mt-1.5 line-clamp-2 pl-6 font-body text-xs leading-relaxed text-neutral-800 sm:text-sm">
+          <p className="mt-px line-clamp-1 pl-6 font-body text-[0.625rem] leading-tight text-neutral-800 sm:text-[10px]">
             {product.description || "—"}
           </p>
         </div>
 
-        <div className="flex items-end justify-between gap-2 pt-1">
+        <div className="mt-0.5 flex flex-nowrap items-center justify-between gap-1.5 pl-6 sm:mt-1">
           <div className="min-w-0">
-            <p className="font-body text-base font-extrabold tabular-nums text-[#E30000] sm:text-lg">
+            <p className="font-body text-sm font-extrabold tabular-nums leading-none tracking-tight text-[#E30000] sm:text-base">
               {priceLine.text}
             </p>
             {priceLine.sub && (
-              <p className="text-[10px] font-medium uppercase tracking-wide text-neutral-500">
+              <p className="mt-px text-[8px] font-medium uppercase tracking-wide text-neutral-500 sm:text-[9px]">
                 {priceLine.sub}
               </p>
             )}
@@ -84,9 +84,9 @@ export function ProductCard({ product, onAdd }: Props) {
           <button
             type="button"
             onClick={() => onAdd(product)}
-            className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-[#E30000] px-3 py-2 text-[10px] font-bold uppercase tracking-wide text-white shadow-[0_6px_18px_-4px_rgba(227,0,0,0.65)] transition hover:scale-[1.05] hover:shadow-[0_8px_22px_-4px_rgba(227,0,0,0.65)] active:scale-95 sm:px-4 sm:text-xs"
+            className="inline-flex shrink-0 items-center gap-1 rounded-full bg-[#E30000] px-2.5 py-1 text-[9px] font-bold uppercase tracking-wide text-white shadow-[0_3px_12px_-2px_rgba(227,0,0,0.45)] transition hover:scale-[1.03] hover:shadow-[0_5px_16px_-3px_rgba(227,0,0,0.5)] active:scale-[0.98] sm:px-3 sm:py-1.5 sm:text-[10px]"
           >
-            <ShoppingCart className="h-3.5 w-3.5 sm:h-4 sm:w-4" aria-hidden />
+            <ShoppingCart className="h-3 w-3 sm:h-3.5 sm:w-3.5" aria-hidden />
             Add
           </button>
         </div>

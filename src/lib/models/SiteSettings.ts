@@ -7,6 +7,10 @@ const siteSettingsSchema = new Schema(
       type: [String],
       default: () => ["", "", ""],
     },
+    restaurantAddress: { type: String, default: "" },
+    restaurantInstruction: { type: String, default: "" },
+    restaurantPhone: { type: String, default: "" },
+    paymentQrImage: { type: String, default: "" },
   },
   { timestamps: true }
 );

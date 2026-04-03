@@ -16,6 +16,10 @@ const orderItemSchema = new Schema(
 
 const orderSchema = new Schema(
   {
+    orderNumber: { type: String, unique: true, sparse: true, trim: true },
+    customerName: { type: String, trim: true, default: "" },
+    customerPhone: { type: String, trim: true, default: "" },
+    customerAddress: { type: String, trim: true, default: "" },
     items: { type: [orderItemSchema], required: true },
     totalAmount: { type: Number, required: true, min: 0 },
     status: {

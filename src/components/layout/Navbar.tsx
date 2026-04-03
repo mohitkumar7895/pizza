@@ -14,26 +14,26 @@ export function Navbar({ onCartClick }: { onCartClick?: () => void }) {
 
   return (
     <header className="sticky top-0 z-50 bg-white">
-      <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-3 px-3 py-1.5 sm:gap-4 sm:px-6 sm:py-3">
+      <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-2 px-3 py-1 sm:gap-3 sm:px-5 sm:py-2">
         <Link
           href="/"
           className="group min-w-0 outline-none focus-visible:ring-2 focus-visible:ring-[#D30000]/35 focus-visible:ring-offset-2"
         >
-          <p className="font-navbar-brand text-[clamp(1.2rem,3.8vw,1.85rem)] font-semibold leading-none tracking-tight text-[#D30000] transition-transform duration-200 group-hover:scale-[1.02] sm:text-[clamp(1.35rem,4vw,2rem)] sm:font-bold">
+          <p className="font-navbar-brand text-[clamp(1.05rem,3.4vw,1.55rem)] font-semibold leading-none tracking-tight text-[#D30000] transition-transform duration-200 group-hover:scale-[1.02] sm:text-[clamp(1.15rem,3.6vw,1.72rem)] sm:font-bold">
             Ad Pizza Hub
           </p>
-          <p className="font-navbar-hindi mt-0.5 max-w-[220px] text-[10px] font-semibold leading-tight text-[#008000] sm:mt-1 sm:max-w-none sm:text-xs sm:leading-snug">
+          <p className="font-navbar-hindi mt-px max-w-[210px] text-[9px] font-semibold leading-tight text-[#008000] sm:mt-0.5 sm:max-w-none sm:text-[11px] sm:leading-snug">
             आपका अपना रेस्टोरेंट सैफई
           </p>
         </Link>
 
-        <div className="flex shrink-0 items-center gap-2 sm:gap-3.5">
+        <div className="flex shrink-0 items-center gap-1.5 sm:gap-2.5">
           <a
             href={`tel:${PHONE.replace(/\s/g, "")}`}
-            className="inline-flex h-9 items-center gap-1.5 rounded-full bg-[#D30000] px-3 font-body text-[0.65rem] font-bold uppercase tracking-[0.1em] text-white shadow-[0_2px_0_#9a0000] transition hover:brightness-105 active:translate-y-px active:brightness-95 sm:h-11 sm:gap-2 sm:px-5 sm:text-xs sm:tracking-[0.12em] md:h-12 md:px-6 md:text-sm"
+            className="inline-flex h-8 items-center gap-1 rounded-full bg-[#D30000] px-2.5 font-body text-[0.6rem] font-bold uppercase tracking-[0.09em] text-white shadow-[0_2px_0_#9a0000] transition hover:brightness-105 active:translate-y-px active:brightness-95 sm:h-9 sm:gap-1.5 sm:px-4 sm:text-[0.65rem] sm:tracking-[0.1em] md:h-10 md:px-5 md:text-xs"
           >
             <Phone
-              className="h-[1rem] w-[1rem] shrink-0 stroke-[2.5] sm:h-[1.15rem] sm:w-[1.15rem] md:h-5 md:w-5"
+              className="h-[0.9rem] w-[0.9rem] shrink-0 stroke-[2.5] sm:h-[1rem] sm:w-[1rem] md:h-[1.1rem] md:w-[1.1rem]"
               aria-hidden
             />
             Call
@@ -41,14 +41,14 @@ export function Navbar({ onCartClick }: { onCartClick?: () => void }) {
           <button
             type="button"
             onClick={onCartClick}
-            className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#D30000] text-white shadow-[0_2px_0_#9a0000] transition hover:brightness-105 active:translate-y-px active:brightness-95 sm:h-11 sm:w-11 md:h-[52px] md:w-[52px]"
+            className="relative flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#D30000] text-white shadow-[0_2px_0_#9a0000] transition hover:brightness-105 active:translate-y-px active:brightness-95 sm:h-10 sm:w-10 md:h-11 md:w-11"
             aria-label={`Open cart, ${itemCount} items`}
           >
             <ShoppingCart
-              className="h-4 w-4 sm:h-5 sm:w-5 md:h-[1.35rem] md:w-[1.35rem]"
+              className="h-3.5 w-3.5 sm:h-[1.05rem] sm:w-[1.05rem] md:h-5 md:w-5"
               strokeWidth={2.25}
             />
-            <span className="font-body absolute -right-0.5 -top-0.5 flex h-[1.125rem] min-w-[1.125rem] items-center justify-center rounded-full border-[2.5px] border-white bg-[#a80000] px-0.5 text-[10px] font-bold leading-none text-white sm:h-5 sm:min-w-5 sm:text-[11px]">
+            <span className="font-body absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full border-2 border-white bg-[#a80000] px-0.5 text-[9px] font-bold leading-none text-white sm:h-[1.05rem] sm:min-w-[1.05rem] sm:text-[10px]">
               {displayCount}
             </span>
           </button>
