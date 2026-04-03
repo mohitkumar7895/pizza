@@ -177,11 +177,20 @@ export function MenuView() {
   };
 
   return (
-    <div className="relative flex flex-col bg-[#faf8f5]">
+    <div className="relative flex min-h-dvh flex-col bg-[#faf8f5]">
       <Navbar onCartClick={() => setCartOpen(true)} />
 
-      <main className="mx-auto w-full max-w-6xl flex-1 px-3 pt-0 pb-4 sm:px-6 sm:pb-6 sm:pt-3 md:pt-4">
-        <HeroBanner images={heroImages} />
+      <main className="mx-auto w-full max-w-6xl flex-1 px-3 pt-0 pb-4 sm:px-6 sm:pb-6 sm:pt-3 md:pt-4 flex flex-col">
+        {loading ? (
+          <div className="flex flex-1 items-center justify-center">
+            <div className="flex flex-col items-center gap-3">
+              <div className="h-12 w-12 animate-spin rounded-full border-4 border-[#e60000]/20 border-t-[#e60000]"></div>
+              <p className="text-sm font-medium text-neutral-600">Loading menu…</p>
+            </div>
+          </div>
+        ) : (
+          <>
+            <HeroBanner images={heroImages} />
 
         <div className="mb-2 md:hidden">
           <label htmlFor="dish-search" className="sr-only">
@@ -268,6 +277,8 @@ export function MenuView() {
               </CategorySection>
             ))}
           </div>
+        )}
+        </>
         )}
       </main>
 

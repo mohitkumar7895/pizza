@@ -4,13 +4,7 @@ interface FooterProps {
 
 export function Footer({ isLoading = false }: FooterProps) {
   return (
-    <footer className="mt-auto bg-[#D00000] px-4 py-3.5 text-center text-white sm:py-4">
-      {isLoading && (
-        <div className="mb-3 flex items-center justify-center gap-2">
-          <div className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white"></div>
-          <p className="text-sm font-medium">Loading menu…</p>
-        </div>
-      )}
+    <footer className="bg-[#D00000] px-4 py-3.5 text-center text-white sm:py-4">
       <div className="mx-auto flex max-w-2xl flex-col items-center justify-center gap-0">
         <p className="font-logo text-xs leading-none text-white sm:text-sm">
           Designed By
