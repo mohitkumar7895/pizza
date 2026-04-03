@@ -92,7 +92,7 @@ export default function AdminOrdersPage() {
       {loading ? (
         <p className="text-neutral-500">Loading…</p>
       ) : (
-        <div className="space-y-5">
+        <div className="space-y-3 sm:space-y-5">
           {orders.map((o) => {
             const dots = stepperDots(o.status);
             const displayId = o.orderNumber
@@ -101,12 +101,12 @@ export default function AdminOrdersPage() {
             return (
               <article
                 key={o._id}
-                className="overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-[0_8px_28px_-12px_rgba(0,0,0,0.08)]"
+                className="overflow-hidden rounded-xl sm:rounded-2xl border border-neutral-200 bg-white shadow-[0_2px_8px_-4px_rgba(0,0,0,0.06)] sm:shadow-[0_8px_28px_-12px_rgba(0,0,0,0.08)]"
               >
-                <div className="border-b border-neutral-100 bg-[#faf8f5] px-5 py-4">
-                  <div className="flex flex-wrap items-start justify-between gap-3">
+                <div className="border-b border-neutral-100 bg-[#faf8f5] px-3 sm:px-5 py-3 sm:py-4">
+                  <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
                     <div>
-                      <p className="font-mono text-sm font-extrabold text-[#e60000]">
+                      <p className="font-mono text-xs sm:text-sm font-extrabold text-[#e60000]">
                         {displayId}
                       </p>
                       <p className="text-xs text-neutral-500">
@@ -115,12 +115,12 @@ export default function AdminOrdersPage() {
                           : "—"}
                       </p>
                     </div>
-                    <p className="text-xl font-extrabold tabular-nums text-[#e60000]">
+                    <p className="text-lg sm:text-xl font-extrabold tabular-nums text-[#e60000]">
                       ₹ {o.totalAmount}
                     </p>
                   </div>
                   {(o.customerName || o.customerPhone || o.customerAddress) && (
-                    <div className="mt-3 rounded-xl border border-neutral-200/80 bg-white px-3 py-2.5 text-sm">
+                    <div className="mt-2 sm:mt-3 rounded-lg sm:rounded-xl border border-neutral-200/80 bg-white px-2.5 sm:px-3 py-2 sm:py-2.5 text-xs sm:text-sm">
                       {o.customerName && (
                         <p>
                           <span className="font-semibold text-neutral-500">

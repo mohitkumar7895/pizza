@@ -180,7 +180,7 @@ export function MenuView() {
     <div className="relative flex min-h-dvh flex-col bg-[#faf8f5]">
       <Navbar onCartClick={() => setCartOpen(true)} />
 
-      <main className="mx-auto w-full max-w-6xl flex-1 px-3 pt-0 pb-4 sm:px-6 sm:pb-6 sm:pt-3 md:pt-4 flex flex-col">
+      <main className="mx-auto w-full max-w-6xl flex-1 px-2.5 py-2 sm:px-3 sm:py-3 md:px-6 md:py-4 flex flex-col">
         {loading ? (
           <div className="flex flex-1 items-center justify-center">
             <div className="flex flex-col items-center gap-3">
@@ -213,14 +213,14 @@ export function MenuView() {
           </div>
         </div>
 
-        <div className="mb-3 -mx-1 overflow-x-auto pb-0.5 sm:mb-4 scrollbar-hide">
-          <div className="flex min-w-min gap-1.5 px-0.5 sm:gap-2.5 sm:px-1">
+        <div className="mb-2.5 -mx-1 overflow-x-auto pb-0.5 sm:mb-3 md:mb-4 scrollbar-hide">
+          <div className="flex min-w-min gap-1 px-1 sm:gap-2 sm:px-1.5 md:gap-2.5">
             {filterItems.map((item) => (
               <button
                 key={item.id}
                 type="button"
                 onClick={() => scrollToSection(item.id)}
-                className="flex min-w-40 max-w-52 shrink-0 items-center gap-1.5 rounded-lg border border-white/80 bg-white px-2 py-1.5 text-left shadow-[0_5px_20px_-10px_rgba(0,0,0,0.12)] transition hover:-translate-y-0.5 hover:shadow-[0_8px_26px_-10px_rgba(230,0,0,0.16)] sm:min-w-48 sm:max-w-56 sm:gap-2 sm:rounded-xl sm:px-2.5 sm:py-2"
+                className="flex min-w-36 max-w-48 shrink-0 items-center gap-1 rounded-lg border border-white/80 bg-white px-2 py-1.5 text-left shadow-[0_5px_20px_-10px_rgba(0,0,0,0.12)] transition hover:-translate-y-0.5 hover:shadow-[0_8px_26px_-10px_rgba(230,0,0,0.16)] sm:min-w-44 sm:max-w-52 sm:gap-1.5 sm:rounded-xl sm:px-2.5 sm:py-2 md:gap-2 md:min-w-48"
               >
                 <span className="relative h-8 w-8 shrink-0 overflow-hidden rounded-full bg-[#fdf6e8] ring-2 ring-[#e60000]/15 sm:h-9 sm:w-9 md:h-10 md:w-10">
                   {item.image ? (

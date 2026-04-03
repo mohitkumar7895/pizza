@@ -121,7 +121,7 @@ export default function AdminCategoriesPage() {
 
       <form
         onSubmit={onSubmit}
-        className="grid gap-4 rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm md:grid-cols-2"
+        className="grid gap-4 rounded-2xl border border-neutral-200 bg-white p-4 sm:p-6 shadow-sm md:grid-cols-2"
       >
         <label className="text-xs font-bold uppercase text-neutral-500">
           Name

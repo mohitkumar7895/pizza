@@ -1,9 +1,11 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
 import { ShoppingCart } from "lucide-react";
 import type { ProductDTO } from "@/types";
 import { NonVegIcon, VegIcon } from "@/components/common/VegIcon";
+import { ImageLightbox } from "@/components/modals/ImageLightbox";
 
 type Props = {
   product: ProductDTO;
@@ -25,33 +27,40 @@ function cardPriceLabel(product: ProductDTO): { text: string; sub?: string } {
     if (minP === maxP) {
       return { text: `₹ ${minP}`, sub: `${v.length} type` };
     }
-    return { text: `From ₹ ${minP}`, sub: `${v.length} types` };
+    return { text: `₹ ${minP}`, sub: `${v.length} types` };
   }
   return { text: `₹ ${product.price}` };
 }
 
 export function ProductCard({ product, onAdd }: Props) {
+  const [lightboxOpen, setLightboxOpen] = useState(false);
   const src = resolveImage(product.image);
   const priceLine = cardPriceLabel(product);
   const imgUnopt =
     src.startsWith("http") || src.startsWith("//") || src.startsWith("/uploads");
 
   return (
-    <article
-      className="group flex items-stretch overflow-hidden rounded-[16px] border border-neutral-200/90 bg-white shadow-[0_5px_20px_-10px_rgba(0,0,0,0.1)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_10px_26px_-12px_rgba(227,0,0,0.12)]"
-    >
+    <>
+      <article
+        className="group flex items-stretch overflow-hidden rounded-2xl border border-neutral-200/90 bg-white shadow-[0_5px_20px_-10px_rgba(0,0,0,0.1)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_10px_26px_-12px_rgba(227,0,0,0.12)]"
+      >
       {/* Left: larger image, fills strip height */}
-      <div className="flex w-[34%] min-w-[5.75rem] shrink-0 items-center justify-center bg-white px-1 py-1 sm:min-w-[6rem] sm:px-1.5 sm:py-1.5 md:w-[32%]">
-        <div className="relative aspect-square w-full max-w-[5.5rem] overflow-hidden rounded-lg bg-neutral-100 sm:max-w-[6rem] md:max-w-[6.25rem]">
+      <div className="flex w-[36%] min-w-22 shrink-0 items-center justify-center bg-white px-1 py-1 sm:min-w-25 sm:px-1.5 sm:py-1.5 md:w-[34%]">
+        <button
+          type="button"
+          onClick={() => setLightboxOpen(true)}
+          className="relative aspect-square w-full max-w-22 overflow-hidden rounded-md bg-neutral-100 hover:opacity-80 transition cursor-pointer sm:max-w-25 md:rounded-lg md:max-w-26"
+          aria-label="View image"
+        >
           <Image
             src={src}
             alt={product.name}
             fill
             className="object-cover object-center transition duration-500 group-hover:scale-[1.03]"
-            sizes="(max-width:640px) 88px, (max-width:1024px) 96px, 100px"
+            sizes="(max-width:640px) 88px, (max-width:1024px) 100px, 104px"
             unoptimized={imgUnopt}
           />
-        </div>
+        </button>
       </div>
 
       {/* Right: yellow panel — title + desc; bottom row = ₹ | Add */}
@@ -79,13 +88,21 @@ export function ProductCard({ product, onAdd }: Props) {
           <button
             type="button"
             onClick={() => onAdd(product)}
-            className="inline-flex shrink-0 items-center gap-1 rounded-full bg-[#E30000] px-2.5 py-1 text-[9px] font-bold uppercase tracking-wide text-white shadow-[0_3px_12px_-2px_rgba(227,0,0,0.45)] transition hover:scale-[1.03] hover:shadow-[0_5px_16px_-3px_rgba(227,0,0,0.5)] active:scale-[0.98] sm:px-3 sm:py-1.5 sm:text-[10px]"
+            className="inline-flex shrink-0 items-center justify-center gap-1 rounded-full bg-[#E30000] px-2.5 py-2 min-h-10 text-[9px] font-bold uppercase tracking-wide text-white shadow-[0_3px_12px_-2px_rgba(227,0,0,0.45)] transition hover:scale-[1.03] hover:shadow-[0_5px_16px_-3px_rgba(227,0,0,0.5)] active:scale-[0.98] sm:px-3 sm:py-2.5 sm:text-[10px] sm:min-h-max"
           >
             <ShoppingCart className="h-3 w-3 sm:h-3.5 sm:w-3.5" aria-hidden />
             Add
           </button>
         </div>
       </div>
-    </article>
+      </article>
+
+      <ImageLightbox
+        open={lightboxOpen}
+        src={src}
+        alt={product.name}
+        onClose={() => setLightboxOpen(false)}
+      />
+    </>
   );
 }

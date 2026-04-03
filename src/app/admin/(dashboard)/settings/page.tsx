@@ -102,10 +102,10 @@ export default function AdminSettingsPage() {
   };
 
   return (
-    <div className="mx-auto max-w-4xl space-y-8">
+    <div className=\"mx-auto max-w-4xl space-y-6 sm:space-y-8\">
       <div>
-        <h1 className="text-2xl font-bold">Site settings</h1>
-        <p className="mt-2 text-sm text-neutral-600">
+        <h1 className=\"text-xl sm:text-2xl font-bold\">Site settings</h1>
+        <p className=\"mt-1 sm:mt-2 text-xs sm:text-sm text-neutral-600\">
           Banners, outlet details, and payment QR — all configured here. The order tracking
           page uses these values.
         </p>

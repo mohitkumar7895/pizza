@@ -305,27 +305,27 @@ export function OrderTrackingClient({ orderNumber }: { orderNumber: string }) {
               </div>
             </article>
 
-            <article className="rounded-2xl border border-neutral-200/80 bg-white p-5 shadow-sm sm:p-6">
-              <h3 className="font-body text-sm font-bold text-neutral-900">
+            <article className="rounded-xl border border-neutral-200/80 bg-white p-4 shadow-sm sm:rounded-2xl sm:p-6">
+              <h3 className="font-body text-xs font-bold uppercase tracking-wide text-neutral-900 sm:text-sm">
                 Restaurant Instruction
               </h3>
               
-              <div className="mt-4 grid gap-5 sm:grid-cols-[1fr_auto]">
+              <div className="mt-4 grid gap-4 sm:gap-5 sm:grid-cols-[1fr_auto]">
                 {/* Left side: Instructions and customer details */}
-                <div>
+                <div className="min-w-0">
                   {(order.customerName || order.customerAddress) && (
-                    <div className="rounded-xl bg-[#faf8f5] px-4 py-3 text-sm text-neutral-800 mb-4">
+                    <div className="rounded-lg bg-[#faf8f5] px-3 py-2.5 text-xs text-neutral-800 mb-3 sm:rounded-xl sm:px-4 sm:py-3 sm:text-sm">
                       {order.customerName ? (
-                        <p className="font-semibold">{order.customerName}</p>
+                        <p className="font-semibold line-clamp-1">{order.customerName}</p>
                       ) : null}
                       {order.customerAddress ? (
-                        <p className="mt-1 text-xs text-neutral-600">
+                        <p className="mt-1 text-[0.7rem] line-clamp-2 text-neutral-600 sm:text-xs">
                           {order.customerAddress}
                         </p>
                       ) : null}
                     </div>
                   )}
-                  <p className="text-sm leading-relaxed text-neutral-600">
+                  <p className="text-xs leading-relaxed text-neutral-600 sm:text-sm">
                     {instruction}
                   </p>
                 </div>
@@ -333,12 +333,12 @@ export function OrderTrackingClient({ orderNumber }: { orderNumber: string }) {
                 {/* Right side: QR Code */}
                 {qrUrl ? (
                   <div className="flex flex-col items-center gap-2 sm:border-l sm:border-neutral-100 sm:pl-5">
-                    <div className="relative h-32 w-32 shrink-0 overflow-hidden rounded-lg border border-neutral-200 bg-white">
+                    <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-lg border border-neutral-200 bg-white sm:h-32 sm:w-32">
                       <Image
                         src={qrUrl}
                         alt="Payment QR"
                         fill
-                        className="object-contain p-1.5"
+                        className="object-contain p-1"
                         unoptimized={qrUnopt}
                       />
                     </div>
@@ -347,7 +347,7 @@ export function OrderTrackingClient({ orderNumber }: { orderNumber: string }) {
                       download
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex h-9 w-9 items-center justify-center rounded-full bg-neutral-100 text-neutral-600 hover:bg-neutral-200 transition"
+                      className="flex h-9 w-9 items-center justify-center rounded-full bg-neutral-100 text-neutral-600 hover:bg-neutral-200 transition active:scale-[0.95]"
                       aria-label="Download QR"
                       title="Download QR Code"
                     >

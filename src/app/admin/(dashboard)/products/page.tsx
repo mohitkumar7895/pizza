@@ -209,10 +209,10 @@ export default function AdminProductsPage() {
         </div>
       )}
 
-      <div className="grid gap-8 lg:grid-cols-2">
+      <div className="grid gap-6 sm:gap-8 lg:grid-cols-2">
         <form
           onSubmit={onSubmit}
-          className="space-y-4 rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm"
+          className="space-y-4 rounded-2xl border border-neutral-200 bg-white p-4 sm:p-6 shadow-sm"
         >
           <h2 className="text-lg font-semibold">
             {editingId ? "Edit product" : "Add product"}
@@ -249,12 +249,12 @@ export default function AdminProductsPage() {
             </p>
           </div>
 
-          <div className="grid gap-3 sm:grid-cols-2">
+          <div className="grid gap-2 sm:grid-cols-2 sm:gap-3">
             <label className="block text-xs font-semibold uppercase text-neutral-500">
               Name
               <input
                 required
-                className="mt-1 w-full rounded-xl border px-3 py-2 text-sm"
+                className="mt-1 w-full rounded-xl border px-3 py-2.5 sm:py-3 text-sm outline-none ring-[#e60000]/30 focus:ring-2"
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
               />

@@ -66,15 +66,15 @@ export default function AdminHomePage() {
           </Link>
         </p>
       )}
-      <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         {cards.map((c) => (
           <Link
             key={c.label}
             href={c.href}
-            className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+            className="rounded-xl sm:rounded-2xl border border-neutral-200 bg-white p-3 sm:p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
           >
-            <p className="text-sm font-medium text-neutral-500">{c.label}</p>
-            <p className="mt-2 text-3xl font-extrabold tabular-nums text-[#e60000]">
+            <p className="text-xs sm:text-sm font-medium text-neutral-500">{c.label}</p>
+            <p className="mt-2 text-2xl sm:text-3xl font-extrabold tabular-nums text-[#e60000]">
               {c.value}
             </p>
           </Link>
