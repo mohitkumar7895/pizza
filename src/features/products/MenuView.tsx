@@ -181,16 +181,8 @@ export function MenuView() {
       <Navbar onCartClick={() => setCartOpen(true)} />
 
       <main className="mx-auto w-full max-w-6xl flex-1 px-2.5 py-2 sm:px-3 sm:py-3 md:px-6 md:py-4 flex flex-col">
-        {loading ? (
-          <div className="flex flex-1 items-center justify-center">
-            <div className="flex flex-col items-center gap-3">
-              <div className="h-12 w-12 animate-spin rounded-full border-4 border-[#e60000]/20 border-t-[#e60000]"></div>
-              <p className="text-sm font-medium text-neutral-600">Loading menu…</p>
-            </div>
-          </div>
-        ) : (
-          <>
-            <HeroBanner images={heroImages} />
+        <>
+          <HeroBanner images={heroImages} />
 
         <div className="mb-2 md:hidden">
           <label htmlFor="dish-search" className="sr-only">
@@ -279,10 +271,9 @@ export function MenuView() {
           </div>
         )}
         </>
-        )}
       </main>
 
-      <Footer isLoading={loading} />
+      <Footer />
 
       <ScrollToTop />
 
