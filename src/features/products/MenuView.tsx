@@ -19,6 +19,7 @@ import { placeOrder } from "@/services/orders";
 import { MIN_ORDER_AMOUNT } from "@/lib/order-constants";
 import { MinimumOrderModal } from "@/components/modals/MinimumOrderModal";
 import { CheckoutDetailsModal } from "@/components/modals/CheckoutDetailsModal";
+import { OrderConfirmationModal } from "@/components/modals/OrderConfirmationModal";
 import type { CategoryDTO, ProductDTO } from "@/types";
 import { useCart } from "@/features/cart/cart-context";
 import { useScrollToSection } from "@/hooks/useScrollToSection";
@@ -42,6 +43,13 @@ export function MenuView() {
   const [minOrderModalOpen, setMinOrderModalOpen] = useState(false);
   const [checkoutOpen, setCheckoutOpen] = useState(false);
   const [dishSearch, setDishSearch] = useState("");
+  const [confirmationOpen, setConfirmationOpen] = useState(false);
+  const [confirmationData, setConfirmationData] = useState<{
+    orderNumber: string;
+    customerName: string;
+    customerPhone: string;
+    customerAddress: string;
+  } | null>(null);
   const router = useRouter();
   const { lines, clear, subtotal } = useCart();
   const scrollToSection = useScrollToSection();
@@ -151,20 +159,32 @@ export function MenuView() {
     setCartOpen(false);
     setCheckoutOpen(false);
     if (id) {
-      router.push(`/order/${encodeURIComponent(id)}`);
-      return;
+      setConfirmationData({
+        orderNumber: id,
+        customerName: data.customerName,
+        customerPhone: data.customerPhone,
+        customerAddress: data.customerAddress,
+      });
+      setConfirmationOpen(true);
+      
+      // Auto redirect after 4 seconds
+      const timer = setTimeout(() => {
+        router.push(`/order/${encodeURIComponent(id)}`);
+      }, 4000);
+      
+      return () => clearTimeout(timer);
     }
     router.push("/");
   };
 
   return (
-    <div className="relative flex min-h-dvh flex-col bg-[#faf8f5]">
+    <div className="relative flex flex-col bg-[#faf8f5]">
       <Navbar onCartClick={() => setCartOpen(true)} />
 
-      <main className="mx-auto w-full max-w-6xl flex-1 px-3 pt-0 pb-8 sm:px-6 sm:pb-10 sm:pt-6 md:pt-8">
+      <main className="mx-auto w-full max-w-6xl flex-1 px-3 pt-0 pb-4 sm:px-6 sm:pb-6 sm:pt-3 md:pt-4">
         <HeroBanner images={heroImages} />
 
-        <div className="mb-3 md:hidden">
+        <div className="mb-2 md:hidden">
           <label htmlFor="dish-search" className="sr-only">
             Search for dishes
           </label>
@@ -185,7 +205,7 @@ export function MenuView() {
           </div>
         </div>
 
-        <div className="mb-4 -mx-1 overflow-x-auto pb-0.5 sm:mb-5">
+        <div className="mb-3 -mx-1 overflow-x-auto pb-0.5 sm:mb-4">
           <div className="flex min-w-min gap-1.5 px-0.5 sm:gap-2.5 sm:px-1">
             {filterItems.map((item) => (
               <button
@@ -221,9 +241,6 @@ export function MenuView() {
           </div>
         </div>
 
-        {loading && (
-          <p className="py-20 text-center text-neutral-500">Loading menu…</p>
-        )}
         {error && (
           <p className="py-20 text-center text-red-600">{error}</p>
         )}
@@ -235,7 +252,7 @@ export function MenuView() {
         )}
 
         {!loading && !error && grouped.length > 0 && (
-          <div className="flex flex-col gap-8 sm:gap-10 md:gap-12">
+          <div className="flex flex-col gap-5 sm:gap-7 md:gap-9">
             {grouped.map(([name, items]) => (
               <CategorySection
                 key={name}
@@ -255,7 +272,7 @@ export function MenuView() {
         )}
       </main>
 
-      <Footer />
+      <Footer isLoading={loading} />
 
       <ScrollToTop />
 
@@ -286,6 +303,20 @@ export function MenuView() {
         onClose={() => setCheckoutOpen(false)}
         onSubmit={handleCheckoutSubmit}
       />
+      
+      {confirmationData && (
+        <OrderConfirmationModal
+          open={confirmationOpen}
+          orderNumber={confirmationData.orderNumber}
+          customerName={confirmationData.customerName}
+          customerPhone={confirmationData.customerPhone}
+          customerAddress={confirmationData.customerAddress}
+          onClose={() => {
+            setConfirmationOpen(false);
+            router.push(`/order/${encodeURIComponent(confirmationData.orderNumber)}`);
+          }}
+        />
+      )}
     </div>
   );
 }

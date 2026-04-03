@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { Plus, Trash2, Upload } from "lucide-react";
+import { Plus, Trash2, Upload, Search, X } from "lucide-react";
 import {
   createProduct,
   deleteProduct,
@@ -34,6 +34,8 @@ export default function AdminProductsPage() {
   const [form, setForm] = useState(emptyForm);
   const [msg, setMsg] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState<string>("");
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -81,11 +83,11 @@ export default function AdminProductsPage() {
         : basePrice;
 
     if (!form.name.trim() || !form.category.trim()) {
-      setMsg("Name aur category zaroori hain.");
+      setMsg("Name and category are required.");
       return;
     }
     if (normalizedVariants.length === 0 && (!Number.isFinite(basePrice) || basePrice < 0)) {
-      setMsg("Price zaroori hai, ya neeche kam se kam ek type add karein.");
+      setMsg("Price is required, or add at least one size/type below.");
       return;
     }
 
@@ -151,7 +153,7 @@ export default function AdminProductsPage() {
       setForm((s) => ({ ...s, image: url }));
       setMsg(null);
     } catch {
-      setMsg("Image upload fail — dubara try karein (logged in hona zaroori hai).");
+      setMsg("Image upload failed — try again (you must be logged in).");
     } finally {
       setUploading(false);
     }
@@ -184,13 +186,20 @@ export default function AdminProductsPage() {
     }));
   };
 
+  const filteredProducts = products.filter((p) => {
+    const matchSearch = p.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                       p.description.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchCategory = !selectedCategory || p.category === selectedCategory;
+    return matchSearch && matchCategory;
+  });
+
   return (
     <div className="space-y-10">
       <div>
         <h1 className="text-2xl font-bold">Products</h1>
         <p className="text-sm text-neutral-600">
-          Har item ke liye alag sizes/types add kar sakte ho. Image yahin se upload —
-          server par <code className="rounded bg-neutral-100 px-1">public/uploads</code> mein save hoti hai.
+          Add different sizes/types for each product. Upload images here — they're saved in
+          <code className="rounded bg-neutral-100 px-1">public/uploads</code> on the server.
         </p>
       </div>
 
@@ -219,14 +228,12 @@ export default function AdminProductsPage() {
                 if (!uploading) fileInputRef.current?.click();
               }
             }}
-            className={`cursor-pointer rounded-2xl border-2 border-dashed border-[#e60000]/35 bg-linear-to-br from-[#fff8f5] to-[#fdf6e8] p-6 text-center transition hover:border-[#e60000]/60 hover:shadow-md ${uploading ? "pointer-events-none opacity-60" : ""}`}
+            className={`cursor-pointer rounded-xl border-2 border-dashed border-[#e60000]/35 bg-linear-to-br from-[#fff8f5] to-[#fdf6e8] p-3 text-center transition hover:border-[#e60000]/60 hover:shadow-sm ${uploading ? "pointer-events-none opacity-60" : ""}`}
           >
-            <Upload className="mx-auto h-10 w-10 text-[#e60000]" aria-hidden />
-            <p className="mt-3 font-semibold text-neutral-900">Yahan se image upload karein</p>
-            <p className="mt-1 text-xs leading-relaxed text-neutral-600">
-              Is box par <span className="font-medium text-[#b91c1c">click</span> karein ya{" "}
-              <span className="font-medium">Choose file</span> — image URL neeche auto bhar jayegi.
-              Save location: <code className="rounded bg-white/80 px-1">/uploads/…</code>
+            <Upload className="mx-auto h-8 w-8 text-[#e60000]" aria-hidden />
+            <p className="mt-2 text-sm font-semibold text-neutral-900">Upload product image</p>
+            <p className="mt-0.5 text-xs text-neutral-600">
+              Click or drag PNG/JPG
             </p>
             <input
               ref={fileInputRef}
@@ -237,8 +244,8 @@ export default function AdminProductsPage() {
               onChange={(e) => onFile(e.target.files?.[0] ?? null)}
               disabled={uploading}
             />
-            <p className="mt-3 text-xs text-neutral-500">
-              {uploading ? "Upload ho raha hai…" : "JPG / PNG — recommended square photo"}
+            <p className="mt-1.5 text-xs text-neutral-500">
+              {uploading ? "Uploading…" : "Square (1:1)"}
             </p>
           </div>
 
@@ -255,7 +262,7 @@ export default function AdminProductsPage() {
             <label className="block text-xs font-semibold uppercase text-neutral-500">
               Base price (₹){" "}
               <span className="normal-case font-normal text-neutral-400">
-                {form.variants.length ? "(types ke saath minimum auto)" : ""}
+                {form.variants.length ? "(minimum price from sizes auto)" : ""}
               </span>
               <input
                 required={form.variants.length === 0}
@@ -299,7 +306,7 @@ export default function AdminProductsPage() {
           </label>
 
           <label className="block text-xs font-semibold uppercase text-neutral-500">
-            Image URL (optional — upload se bhar jati hai)
+            Image URL (optional — auto-filled from upload)
             <input
               className="mt-1 w-full rounded-xl border px-3 py-2 text-sm"
               value={form.image}
@@ -315,8 +322,8 @@ export default function AdminProductsPage() {
                   Types / sizes
                 </p>
                 <p className="mt-0.5 text-xs text-neutral-500">
-                  Ja reference: &quot;Margherita Pizza - ₹ 100&quot;, &quot;Medium - ₹ 180&quot;, &quot;Large - ₹ 300&quot;.
-                  Khali chhoro = sirf base price.
+                  Example: "Margherita Pizza - ₹100", "Medium - ₹180", "Large - ₹300".
+                  Leave empty = use base price only.
                 </p>
               </div>
               <button
@@ -450,6 +457,57 @@ export default function AdminProductsPage() {
         </div>
       </div>
 
+      <div className="space-y-4 rounded-2xl border border-neutral-200 bg-white p-4 shadow-sm">
+        {/* Search and Filter Bar */}
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="relative flex-1 sm:max-w-xs">
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-neutral-400" />
+            <input
+              type="text"
+              placeholder="Search products…"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full rounded-lg border border-neutral-200 bg-white pl-10 pr-3 py-2 text-sm focus:border-[#e60000] focus:outline-none focus:ring-2 focus:ring-[#e60000]/20"
+            />
+          </div>
+          
+          <div className="flex items-center gap-2">
+            <label className="text-sm font-semibold text-neutral-600">Category:</label>
+            <select
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
+              className="rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm focus:border-[#e60000] focus:outline-none focus:ring-2 focus:ring-[#e60000]/20"
+            >
+              <option value="">All Categories</option>
+              {categories.map((cat) => (
+                <option key={cat._id} value={cat.name}>
+                  {cat.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {(searchTerm || selectedCategory) && (
+            <button
+              onClick={() => {
+                setSearchTerm("");
+                setSelectedCategory("");
+              }}
+              className="flex items-center gap-1 text-xs font-semibold text-neutral-600 hover:text-neutral-900"
+            >
+              <X className="h-4 w-4" />
+              Clear Filters
+            </button>
+          )}
+        </div>
+
+        {/* Results count */}
+        <p className="text-xs text-neutral-500">
+          Showing <span className="font-semibold text-neutral-700">{filteredProducts.length}</span> of{" "}
+          <span className="font-semibold text-neutral-700">{products.length}</span> products
+        </p>
+      </div>
+
       <div className="overflow-x-auto rounded-2xl border border-neutral-200 bg-white shadow-sm">
         <table className="w-full min-w-160 text-left text-sm">
           <thead className="bg-neutral-50 text-xs uppercase text-neutral-500">
@@ -469,8 +527,14 @@ export default function AdminProductsPage() {
                   Loading…
                 </td>
               </tr>
+            ) : filteredProducts.length === 0 ? (
+              <tr>
+                <td colSpan={6} className="px-4 py-8 text-center text-neutral-500">
+                  {products.length === 0 ? "No products yet" : "No products match your search"}
+                </td>
+              </tr>
             ) : (
-              products.map((p) => (
+              filteredProducts.map((p) => (
                 <tr key={p._id} className="border-t border-neutral-100">
                   <td className="px-4 py-3 font-medium">{p.name}</td>
                   <td className="px-4 py-3">{p.category}</td>

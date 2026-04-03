@@ -1,8 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { Check } from "lucide-react";
-import { fetchOrdersAdmin, updateOrderStatus } from "@/services/orders";
+import { Check, Trash2 } from "lucide-react";
+import { fetchOrdersAdmin, updateOrderStatus, deleteOrder } from "@/services/orders";
 import type { OrderDTO, OrderStatus } from "@/types";
 
 const statuses: OrderStatus[] = [
@@ -60,6 +60,20 @@ export default function AdminOrdersPage() {
       load();
     } catch {
       setMsg("Update failed.");
+    }
+  };
+
+  const onDelete = async (id: string, orderNumber: string) => {
+    if (!confirm(`Delete order ${orderNumber}? This action cannot be undone.`)) {
+      return;
+    }
+    try {
+      setMsg(null);
+      await deleteOrder(id);
+      setMsg("Order deleted successfully.");
+      load();
+    } catch {
+      setMsg("Delete failed.");
     }
   };
 
@@ -217,6 +231,15 @@ export default function AdminOrdersPage() {
                       {labels[s]}
                     </button>
                   ))}
+                  <button
+                    type="button"
+                    onClick={() => onDelete(o._id, displayId)}
+                    className="ml-auto rounded-full border border-red-200 bg-red-50 px-3 py-1.5 text-xs font-bold text-red-800 transition hover:bg-red-100"
+                    title="Delete order"
+                  >
+                    <Trash2 className="h-4 w-4 inline mr-1" />
+                    Delete
+                  </button>
                 </div>
               </article>
             );

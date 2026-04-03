@@ -11,9 +11,9 @@ import {
 import { uploadImage } from "@/services/products";
 
 const BANNER_LABELS = [
-  "Banner 1 (baayin / mobile pe upar)",
-  "Banner 2 (beech)",
-  "Banner 3 (daayin)",
+  "Banner 1 (left / top on mobile)",
+  "Banner 2 (center)",
+  "Banner 3 (right)",
 ] as const;
 
 const emptySettings = (): SiteSettingsDTO => ({
@@ -50,7 +50,7 @@ export default function AdminSettingsPage() {
     try {
       setS(await fetchSettings());
     } catch {
-      setMsg("Settings load nahi hui — login / DB check karein.");
+      setMsg("Failed to load settings — check your login and database connection.");
     } finally {
       setLoading(false);
     }
@@ -68,7 +68,7 @@ export default function AdminSettingsPage() {
       const url = await uploadImage(file);
       setSlot(index, url);
     } catch {
-      setMsg("Upload fail — dubara try karein.");
+      setMsg("Upload failed — try again.");
     } finally {
       setUploadingIdx(null);
     }
@@ -82,7 +82,7 @@ export default function AdminSettingsPage() {
       const url = await uploadImage(file);
       setS((p) => ({ ...p, paymentQrImage: url }));
     } catch {
-      setMsg("QR upload fail — dubara try karein.");
+      setMsg("QR upload failed — try again.");
     } finally {
       setUploadingQr(false);
     }
@@ -93,7 +93,7 @@ export default function AdminSettingsPage() {
     setMsg(null);
     try {
       await updateSettings(s);
-      setMsg("Save ho gaya — homepage / order page refresh karein.");
+      setMsg("Settings saved — refresh the homepage and order tracking to see changes.");
     } catch {
       setMsg("Save fail — try again.");
     } finally {
@@ -106,8 +106,8 @@ export default function AdminSettingsPage() {
       <div>
         <h1 className="text-2xl font-bold">Site settings</h1>
         <p className="mt-2 text-sm text-neutral-600">
-          Banners, outlet details, aur payment QR — sab yahan se. Order tracking
-          page inhi values se banti hai.
+          Banners, outlet details, and payment QR — all configured here. The order tracking
+          page uses these values.
         </p>
       </div>
 
@@ -137,11 +137,11 @@ export default function AdminSettingsPage() {
                       uploadingIdx === null && fileRefs[i].current?.click()
                     }
                     disabled={uploadingIdx !== null}
-                    className="flex w-full shrink-0 flex-col items-center justify-center rounded-2xl border-2 border-dashed border-[#e60000]/40 bg-linear-to-br from-[#fff8f5] to-[#fdf6e8] px-4 py-8 text-center transition hover:border-[#e60000]/70 disabled:opacity-50 sm:w-52"
+                    className="flex w-full shrink-0 flex-col items-center justify-center rounded-xl border-2 border-dashed border-[#e60000]/40 bg-linear-to-br from-[#fff8f5] to-[#fdf6e8] px-4 py-4 text-center transition hover:border-[#e60000]/70 disabled:opacity-50 sm:w-40"
                   >
-                    <Upload className="h-8 w-8 text-[#e60000]" />
-                    <span className="mt-2 text-xs font-medium text-neutral-700">
-                      Yahan click — image chuno
+                    <Upload className="h-7 w-7 text-[#e60000]" />
+                    <span className="mt-1.5 text-xs font-medium text-neutral-700">
+                      Upload
                     </span>
                     <input
                       ref={fileRefs[i]}
@@ -160,7 +160,7 @@ export default function AdminSettingsPage() {
                   </button>
                   <div className="min-w-0 flex-1 space-y-2">
                     <label className="block text-xs font-semibold uppercase text-neutral-500">
-                      Image URL (paste bhi kar sakte ho)
+                      Image URL (you can paste directly)
                       <input
                         className="mt-1 w-full rounded-xl border px-3 py-2 text-sm"
                         value={s.heroImages[i]}
@@ -183,7 +183,7 @@ export default function AdminSettingsPage() {
                       </div>
                     ) : (
                       <p className="text-xs text-neutral-400">
-                        Abhi koi image nahi
+                        No image yet
                       </p>
                     )}
                   </div>
@@ -197,7 +197,7 @@ export default function AdminSettingsPage() {
               Outlet & order tracking
             </h2>
             <p className="mt-1 text-xs text-neutral-500">
-              Customers ko order page par address, instruction aur QR yahi dikhega.
+              Customers will see the address, instructions, and QR code on their order tracking page.
             </p>
             <div className="mt-4 space-y-4">
               <label className="block">
@@ -241,7 +241,7 @@ export default function AdminSettingsPage() {
                       restaurantInstruction: e.target.value,
                     }))
                   }
-                  placeholder="Payment ke baare mein short note…"
+                  placeholder="Short payment note or UPI instructions…"
                 />
               </label>
 
@@ -256,10 +256,10 @@ export default function AdminSettingsPage() {
                       !uploadingQr && qrFileRef.current?.click()
                     }
                     disabled={uploadingQr}
-                    className="flex w-full shrink-0 flex-col items-center justify-center rounded-2xl border-2 border-dashed border-neutral-300 bg-neutral-50 px-4 py-6 text-center text-sm disabled:opacity-50 sm:w-40"
+                    className="flex w-full shrink-0 flex-col items-center justify-center rounded-xl border-2 border-dashed border-neutral-300 bg-neutral-50 px-4 py-4 text-center text-sm disabled:opacity-50 sm:w-40"
                   >
                     <Upload className="mx-auto h-7 w-7 text-[#e60000]" />
-                    <span className="mt-2 text-xs font-medium">
+                    <span className="mt-1.5 text-xs font-medium">
                       {uploadingQr ? "Upload…" : "Upload QR"}
                     </span>
                     <input

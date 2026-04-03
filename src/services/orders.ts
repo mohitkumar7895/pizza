@@ -30,3 +30,7 @@ export async function updateOrderStatus(
   const { data } = await http.put<OrderDTO>(`/api/orders/${id}`, { status });
   return data;
 }
+
+export async function deleteOrder(id: string): Promise<void> {
+  await http.delete(`/api/orders/${id}`);
+}

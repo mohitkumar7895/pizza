@@ -77,3 +77,22 @@ export async function PUT(request: Request, { params }: Params) {
     return NextResponse.json({ error: "Failed to update order" }, { status: 500 });
   }
 }
+
+export async function DELETE(request: Request, { params }: Params) {
+  if (!(await isAdminSession())) {
+    return adminJsonResponse("Unauthorized");
+  }
+  try {
+    const { id } = await params;
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return NextResponse.json({ error: "Invalid id" }, { status: 400 });
+    }
+    await connectDB();
+    const result = await Order.findByIdAndDelete(id);
+    if (!result) return NextResponse.json({ error: "Not found" }, { status: 404 });
+    return NextResponse.json({ success: true });
+  } catch (e) {
+    console.error(e);
+    return NextResponse.json({ error: "Failed to delete order" }, { status: 500 });
+  }
+}

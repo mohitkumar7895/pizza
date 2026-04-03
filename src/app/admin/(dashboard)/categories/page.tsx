@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   createCategory,
   deleteCategory,
@@ -9,8 +9,10 @@ import {
 } from "@/services/categories";
 import { uploadImage } from "@/services/products";
 import type { CategoryDTO } from "@/types";
+import { Upload } from "lucide-react";
 
 export default function AdminCategoriesPage() {
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const [list, setList] = useState<CategoryDTO[]>([]);
   const [loading, setLoading] = useState(true);
   const [name, setName] = useState("");
@@ -93,10 +95,11 @@ export default function AdminCategoriesPage() {
   const onFile = async (f: File | null) => {
     if (!f) return;
     setUploading(true);
+    setMsg(null);
     try {
       setImage(await uploadImage(f));
     } catch {
-      setMsg("Upload failed.");
+      setMsg("Image upload failed — check internet or try a different file.");
     } finally {
       setUploading(false);
     }
@@ -155,15 +158,37 @@ export default function AdminCategoriesPage() {
             onChange={(e) => setImage(e.target.value)}
           />
         </label>
-        <div className="md:col-span-2">
-          <p className="text-xs font-bold uppercase text-neutral-500">Upload</p>
+
+        {/* File Upload Area */}
+        <div
+          role="button"
+          tabIndex={0}
+          onClick={() => !uploading && fileInputRef.current?.click()}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              if (!uploading) fileInputRef.current?.click();
+            }
+          }}
+          className={`md:col-span-2 cursor-pointer rounded-xl border-2 border-dashed border-[#e60000]/35 bg-linear-to-br from-[#fff8f5] to-[#fdf6e8] p-3 text-center transition hover:border-[#e60000]/60 hover:shadow-sm ${uploading ? "pointer-events-none opacity-60" : ""}`}
+        >
+          <Upload className="mx-auto h-8 w-8 text-[#e60000]" aria-hidden />
+          <p className="mt-2 text-sm font-semibold text-neutral-900">Upload image</p>
+          <p className="mt-0.5 text-xs text-neutral-600">
+            Click or drag PNG/JPG
+          </p>
           <input
+            ref={fileInputRef}
             type="file"
             accept="image/*"
-            className="mt-1 text-sm"
-            disabled={uploading}
+            className="sr-only"
+            tabIndex={-1}
             onChange={(e) => onFile(e.target.files?.[0] ?? null)}
+            disabled={uploading}
           />
+          <p className="mt-1.5 text-xs text-neutral-500">
+            {uploading ? "Uploading…" : "Square (1:1)"}
+          </p>
         </div>
         <div className="flex gap-2 md:col-span-2">
           <button
