@@ -168,13 +168,12 @@ export function MenuView() {
       setConfirmationOpen(true);
       
       // Auto redirect after 4 seconds
-      const timer = setTimeout(() => {
+      setTimeout(() => {
         router.push(`/order/${encodeURIComponent(id)}`);
       }, 4000);
-      
-      return () => clearTimeout(timer);
+    } else {
+      router.push("/");
     }
-    router.push("/");
   };
 
   return (
