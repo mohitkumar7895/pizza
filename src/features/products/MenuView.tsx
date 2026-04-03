@@ -176,6 +176,23 @@ export function MenuView() {
     }
   };
 
+  if (loading) {
+    return (
+      <div className="relative flex min-h-dvh flex-col bg-[#faf8f5]">
+        <Navbar onCartClick={() => setCartOpen(true)} />
+        <main className="mx-auto w-full max-w-6xl flex-1 px-2.5 py-2 sm:px-3 sm:py-3 md:px-6 md:py-4 flex flex-col items-center justify-center">
+          <div className="flex flex-col items-center gap-4">
+            <div className="relative h-12 w-12">
+              <div className="absolute inset-0 rounded-full border-4 border-[#e60000]/20 border-t-[#e60000] animate-spin"></div>
+            </div>
+            <p className="text-sm text-neutral-600">Loading menu…</p>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
   return (
     <div className="relative flex min-h-dvh flex-col bg-[#faf8f5]">
       <Navbar onCartClick={() => setCartOpen(true)} />

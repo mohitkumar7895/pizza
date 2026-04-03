@@ -1,11 +1,17 @@
 import axios from "axios";
 import type { ProductDTO } from "@/types";
 import { http } from "./http";
+import { getCache, setCache } from "@/lib/cache";
 
 export async function fetchProducts(category?: string): Promise<ProductDTO[]> {
+  const cacheKey = `products_${category || 'all'}`;
+  const cached = getCache<ProductDTO[]>(cacheKey);
+  if (cached) return cached;
+  
   const { data } = await http.get<ProductDTO[]>("/api/products", {
     params: category ? { category } : undefined,
   });
+  setCache(cacheKey, data, 60); // Cache for 60 seconds
   return data;
 }
 

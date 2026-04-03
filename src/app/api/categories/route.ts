@@ -26,9 +26,11 @@ export async function GET() {
   try {
     await connectDB();
     const docs = await Category.find().sort({ sortOrder: 1, name: 1 }).lean();
-    return NextResponse.json(
+    const response = NextResponse.json(
       docs.map((d) => toDTO({ ...d, _id: d._id }))
     );
+    response.headers.set('Cache-Control', 'public, s-maxage=120, stale-while-revalidate=240');
+    return response;
   } catch (e) {
     console.error(e);
     return NextResponse.json({ error: "Failed to fetch categories" }, { status: 500 });

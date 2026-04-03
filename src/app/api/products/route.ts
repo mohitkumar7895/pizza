@@ -19,7 +19,9 @@ export async function GET(request: Request) {
         variants: d.variants as { label: string; price: number }[] | undefined,
       })
     );
-    return NextResponse.json(products);
+    const response = NextResponse.json(products);
+    response.headers.set('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=120');
+    return response;
   } catch (e) {
     console.error(e);
     return NextResponse.json(
