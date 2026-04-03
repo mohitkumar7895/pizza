@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400" fill="none">
+  <rect width="400" height="400" rx="48" fill="#FDF6E8"/>
+  <circle cx="200" cy="190" r="118" fill="#FFE08A" stroke="#E60000" stroke-width="6"/>
+  <circle cx="155" cy="160" r="14" fill="#C41E3A"/>
+  <circle cx="235" cy="175" r="12" fill="#228B22"/>
+  <circle cx="200" cy="220" r="16" fill="#C41E3A"/>
+  <circle cx="260" cy="210" r="10" fill="#FFD700"/>
+  <text x="200" y="330" text-anchor="middle" font-family="system-ui,sans-serif" font-size="20" fill="#991B1B" font-weight="600">Ad Pizza Hub</text>
+</svg>
