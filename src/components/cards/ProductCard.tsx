@@ -75,11 +75,6 @@ export function ProductCard({ product, onAdd }: Props) {
             <p className="font-body text-sm font-extrabold tabular-nums leading-none tracking-tight text-[#E30000] sm:text-base">
               {priceLine.text}
             </p>
-            {priceLine.sub && (
-              <p className="mt-px text-[8px] font-medium uppercase tracking-wide text-neutral-500 sm:text-[9px]">
-                {priceLine.sub}
-              </p>
-            )}
           </div>
           <button
             type="button"

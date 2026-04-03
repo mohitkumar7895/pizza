@@ -36,3 +36,19 @@ body {
 .font-navbar-hindi {
   font-family: var(--font-noto-devanagari), ui-sans-serif, system-ui, sans-serif;
 }
+
+/* Hide scrollbar completely */
+.scrollbar-hide {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Remove space reserved for scrollbar */
+.scrollbar-hide {
+  overflow: -moz-scrollbars-vertical;
+  overflow-y: scroll;
+}

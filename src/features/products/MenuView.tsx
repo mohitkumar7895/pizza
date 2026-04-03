@@ -204,7 +204,7 @@ export function MenuView() {
           </div>
         </div>
 
-        <div className="mb-3 -mx-1 overflow-x-auto pb-0.5 sm:mb-4">
+        <div className="mb-3 -mx-1 overflow-x-auto pb-0.5 sm:mb-4 scrollbar-hide">
           <div className="flex min-w-min gap-1.5 px-0.5 sm:gap-2.5 sm:px-1">
             {filterItems.map((item) => (
               <button

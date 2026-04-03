@@ -209,7 +209,7 @@ export default function AdminCategoriesPage() {
         </div>
       </form>
 
-      <div className="overflow-x-auto rounded-2xl border border-neutral-200 bg-white">
+      <div className="overflow-x-auto rounded-2xl border border-neutral-200 bg-white scrollbar-hide">
         <table className="w-full text-left text-sm">
           <thead className="bg-neutral-50 text-xs uppercase text-neutral-500">
             <tr>
