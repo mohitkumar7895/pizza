@@ -22,7 +22,7 @@ export function Navbar({ onCartClick }: { onCartClick?: () => void }) {
           <p className="font-navbar-brand text-[clamp(1.05rem,3.4vw,1.55rem)] font-semibold leading-none tracking-tight text-[#D30000] transition-transform duration-200 group-hover:scale-[1.02] sm:text-[clamp(1.15rem,3.6vw,1.72rem)] sm:font-bold">
             Ad Pizza Hub
           </p>
-          <p className="font-navbar-hindi mt-px max-w-[210px] text-[9px] font-semibold leading-tight text-[#008000] sm:mt-0.5 sm:max-w-none sm:text-[11px] sm:leading-snug">
+          <p className="font-navbar-hindi mt-px max-w-52.5 text-[9px] font-semibold leading-tight text-[#008000] sm:mt-0.5 sm:max-w-none sm:text-[11px] sm:leading-snug">
             आपका अपना रेस्टोरेंट सैफई
           </p>
         </Link>
@@ -30,10 +30,10 @@ export function Navbar({ onCartClick }: { onCartClick?: () => void }) {
         <div className="flex shrink-0 items-center gap-1.5 sm:gap-2.5">
           <a
             href={`tel:${PHONE.replace(/\s/g, "")}`}
-            className="inline-flex h-8 items-center gap-1 rounded-full bg-[#D30000] px-2.5 font-body text-[0.6rem] font-bold uppercase tracking-[0.09em] text-white shadow-[0_2px_0_#9a0000] transition hover:brightness-105 active:translate-y-px active:brightness-95 sm:h-9 sm:gap-1.5 sm:px-4 sm:text-[0.65rem] sm:tracking-[0.1em] md:h-10 md:px-5 md:text-xs"
+            className="inline-flex h-8 items-center gap-1 rounded-full bg-[#D30000] px-2.5 font-body text-[0.6rem] font-bold uppercase tracking-[0.09em] text-white shadow-[0_2px_0_#9a0000] transition hover:brightness-105 active:translate-y-px active:brightness-95 sm:h-9 sm:gap-1.5 sm:px-4 sm:text-[0.65rem] sm:tracking-widest md:h-10 md:px-5 md:text-xs"
           >
             <Phone
-              className="h-[0.9rem] w-[0.9rem] shrink-0 stroke-[2.5] sm:h-[1rem] sm:w-[1rem] md:h-[1.1rem] md:w-[1.1rem]"
+              className="h-[0.9rem] w-[0.9rem] shrink-0 stroke-[2.5] sm:h-4 sm:w-4 md:h-[1.1rem] md:w-[1.1rem]"
               aria-hidden
             />
             Call

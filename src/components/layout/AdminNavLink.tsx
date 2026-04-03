@@ -23,7 +23,7 @@ export function AdminNavLink({ href, label, icon: Icon }: AdminNavLinkProps) {
       href={href}
       className={`flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-semibold transition-all duration-200 whitespace-nowrap md:whitespace-normal ${
         isActive
-          ? "bg-gradient-to-r from-[#e60000]/10 to-transparent text-[#e60000] shadow-sm border-l-4 border-[#e60000] md:border-l-4"
+          ? "bg-linear-to-r from-[#e60000]/10 to-transparent text-[#e60000] shadow-sm border-l-4 border-[#e60000] md:border-l-4"
           : "text-neutral-600 hover:bg-neutral-50 hover:text-neutral-900"
       }`}
     >

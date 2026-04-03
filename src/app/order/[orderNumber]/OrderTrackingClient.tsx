@@ -198,7 +198,7 @@ export function OrderTrackingClient({ orderNumber }: { orderNumber: string }) {
 
       {/* Refresh indicator */}
       {isRefreshing && (
-        <div className="flex items-center justify-center gap-2 bg-gradient-to-r from-[#e60000]/10 to-transparent px-4 py-3">
+        <div className="flex items-center justify-center gap-2 bg-linear-to-r from-[#e60000]/10 to-transparent px-4 py-3">
           <Loader2 className="h-4 w-4 animate-spin text-[#e60000]" />
           <p className="text-xs font-semibold text-[#e60000]">Updating order status...</p>
         </div>
@@ -267,7 +267,7 @@ export function OrderTrackingClient({ orderNumber }: { orderNumber: string }) {
                   {/* Connect line */}
                   <div className="absolute top-5 left-0 right-0 h-0.5 bg-neutral-200 -z-10">
                     <div
-                      className="h-full bg-gradient-to-r from-emerald-500 to-emerald-500 transition-all duration-500"
+                      className="h-full bg-linear-to-r from-emerald-500 to-emerald-500 transition-all duration-500"
                       style={{
                         width: `${steps.filter((s) => s.done).length * 33.33 - 16.67}%`,
                       }}

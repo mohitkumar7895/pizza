@@ -169,7 +169,7 @@ export default function AdminSettingsPage() {
                       />
                     </label>
                     {s.heroImages[i].trim() ? (
-                      <div className="relative mt-2 aspect-[21/9] w-full max-w-xl overflow-hidden rounded-xl bg-neutral-100">
+                      <div className="relative mt-2 aspect-21/9 w-full max-w-xl overflow-hidden rounded-xl bg-neutral-100">
                         <Image
                           src={s.heroImages[i].trim()}
                           alt=""

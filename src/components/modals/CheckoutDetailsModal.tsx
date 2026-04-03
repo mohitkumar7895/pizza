@@ -115,7 +115,7 @@ export function CheckoutDetailsModal({ open, onClose, onSubmit }: Props) {
   };
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-end justify-center sm:items-center sm:p-4">
+    <div className="fixed inset-0 z-100 flex items-end justify-center sm:items-center sm:p-4">
       <button
         type="button"
         className="absolute inset-0 bg-black/45 backdrop-blur-[2px]"

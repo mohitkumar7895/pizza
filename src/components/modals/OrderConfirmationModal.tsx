@@ -34,7 +34,7 @@ export function OrderConfirmationModal({
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-0">
+    <div className="fixed inset-0 z-100 flex items-center justify-center p-4 sm:p-0">
       <button
         type="button"
         className="absolute inset-0 bg-black/50 backdrop-blur-sm"
@@ -43,7 +43,7 @@ export function OrderConfirmationModal({
       />
       <div className="relative z-10 w-full max-w-sm overflow-hidden rounded-3xl bg-white shadow-2xl">
         {/* Header Background */}
-        <div className="relative bg-gradient-to-br from-[#e60000] to-[#b91c1c] px-6 pt-8 pb-16">
+        <div className="relative bg-linear-to-br from-[#e60000] to-[#b91c1c] px-6 pt-8 pb-16">
           {/* Checkmark Animation */}
           <div
             className={`flex justify-center transition-all duration-700 ${
@@ -132,7 +132,7 @@ export function OrderConfirmationModal({
 
           {/* Wait Message */}
           <div
-            className={`space-y-2 rounded-2xl bg-gradient-to-br from-[#fef3f2] to-[#fdf7f1] p-4 transition-all duration-700 delay-400 ${
+            className={`space-y-2 rounded-2xl bg-linear-to-br from-[#fef3f2] to-[#fdf7f1] p-4 transition-all duration-700 delay-400 ${
               showContent ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
             }`}
           >
@@ -150,7 +150,7 @@ export function OrderConfirmationModal({
           {/* Action Button */}
           <button
             onClick={onClose}
-            className={`w-full rounded-xl bg-gradient-to-r from-[#e60000] to-[#b91c1c] px-4 py-3 font-body font-semibold text-white shadow-lg transition-all duration-700 delay-500 hover:shadow-xl active:scale-95 ${
+            className={`w-full rounded-xl bg-linear-to-r from-[#e60000] to-[#b91c1c] px-4 py-3 font-body font-semibold text-white shadow-lg transition-all duration-700 delay-500 hover:shadow-xl active:scale-95 ${
               showContent ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
             }`}
           >

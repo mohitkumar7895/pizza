@@ -51,7 +51,7 @@ export function HeroBanner({ images }: Props) {
               className="box-border w-full shrink-0 grow-0 basis-full snap-start flex-[0_0_100%]"
             >
               <div className="overflow-hidden rounded-2xl bg-[#faf8f5]">
-                <div className="relative aspect-[28/9] w-full">
+                <div className="relative aspect-28/9 w-full">
                   <Image
                     src={u}
                     alt=""
@@ -104,7 +104,7 @@ export function HeroBanner({ images }: Props) {
                   key={i}
                   className="relative w-full overflow-hidden rounded-xl bg-[#faf8f5] sm:rounded-2xl"
                 >
-                  <div className="relative aspect-[21/9] w-full sm:aspect-[24/9] md:aspect-[28/9]">
+                  <div className="relative aspect-21/9 w-full sm:aspect-24/9 md:aspect-28/9">
                     <Image
                       src={u}
                       alt=""
