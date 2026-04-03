@@ -58,47 +58,6 @@ export default function AdminLoginPage() {
         {!statusLoaded && (
           <p className="mt-6 text-center text-sm text-neutral-500">Loading…</p>
         )}
-        {statusLoaded && (
-          <div className="mt-4 flex gap-2 rounded-2xl bg-neutral-100 p-1">
-            <button
-              type="button"
-              onClick={() => {
-                setMode("login");
-                setMsg(null);
-              }}
-              className={`flex-1 rounded-xl py-2.5 text-sm font-bold transition ${
-                mode === "login"
-                  ? "bg-white text-[#e60000] shadow-sm"
-                  : "text-neutral-600 hover:text-neutral-900"
-              }`}
-            >
-              Login
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setMode("register");
-                setMsg(null);
-              }}
-              disabled={!canRegister}
-              className={`flex-1 rounded-xl py-2.5 text-sm font-bold transition ${
-                mode === "register"
-                  ? "bg-white text-[#e60000] shadow-sm"
-                  : "text-neutral-600 hover:text-neutral-900"
-              } disabled:cursor-not-allowed disabled:opacity-45`}
-            >
-              Register
-            </button>
-          </div>
-        )}
-
-        {!canRegister && statusLoaded && mode === "register" && (
-          <p className="mt-3 text-xs text-neutral-500">
-            Register sirf tab khulega jab database mein{" "}
-            <span className="font-semibold">koi admin na ho</span> (pehla setup).
-            Pehle se admin hai to sirf login karein.
-          </p>
-        )}
 
         {statusLoaded && mode === "login" ? (
           <form
