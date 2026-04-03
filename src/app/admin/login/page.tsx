@@ -46,14 +46,14 @@ export default function AdminLoginPage() {
     <div className="flex min-h-dvh items-center justify-center bg-[#faf8f5] p-4 font-body">
       <div className="w-full max-w-md rounded-3xl border border-neutral-200 bg-white p-8 shadow-xl">
         <h1 className="font-logo text-3xl text-[#e60000]">Admin</h1>
-        <p className="mt-2 text-sm text-neutral-600">
+        {/* <p className="mt-2 text-sm text-neutral-600">
           <code className="rounded bg-neutral-100 px-1">MONGODB_URI</code> aur{" "}
           <code className="rounded bg-neutral-100 px-1">JWT_SECRET</code>{" "}
           <code className="rounded bg-neutral-100 px-1">.env</code> ya{" "}
           <code className="rounded bg-neutral-100 px-1">.env.local</code> mein hon —
           <span className="font-medium text-amber-800"> = ke baad space mat rakho</span>.
           Naya setup: pehle <span className="font-semibold">Register</span> se admin banao (jab tak DB khali ho).
-        </p>
+        </p> */}
 
         {!statusLoaded && (
           <p className="mt-6 text-center text-sm text-neutral-500">Loading…</p>
