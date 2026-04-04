@@ -27,7 +27,7 @@ const notoDevanagari = Noto_Sans_Devanagari({
 });
 
 export const metadata: Metadata = {
-  title: "Ad Pizza Hub — Order Online",
+  title: "Ad Pizza Hub Saifai",
   description: "आपका अपना रेस्टोरेंट सैफई — pizzas, burgers & more.",
 };
 
