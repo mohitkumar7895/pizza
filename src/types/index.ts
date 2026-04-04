@@ -8,6 +8,8 @@ export type ProductDTO = {
   name: string;
   description: string;
   price: number;
+  /** Present when product is linked to admin Categories — keeps name in sync on rename */
+  categoryId?: string;
   category: string;
   image: string;
   isVeg: boolean;

@@ -11,8 +11,7 @@ import { ProductCard } from "@/components/cards/ProductCard";
 import { AddToCartModal } from "@/components/modals/AddToCartModal";
 import { CartDrawer } from "@/components/modals/CartDrawer";
 import { ScrollToTop } from "@/components/buttons/ScrollToTop";
-import { fetchProducts } from "@/services/products";
-import { fetchCategories } from "@/services/categories";
+import { fetchMenu } from "@/services/menu";
 import { fetchSettings } from "@/services/settings";
 import { HeroBanner } from "@/components/layout/HeroBanner";
 import { placeOrder } from "@/services/orders";
@@ -26,6 +25,28 @@ import { useScrollToSection } from "@/hooks/useScrollToSection";
 
 function slugify(name: string) {
   return name.replace(/[^a-zA-Z0-9]+/g, "-").replace(/^-|-$/g, "") || "cat";
+}
+
+/** Stable DOM id for scroll + section (rename-safe). */
+function sectionDomId(categoryId: string) {
+  return `cat-${categoryId}`;
+}
+
+function productInCategory(p: ProductDTO, c: CategoryDTO): boolean {
+  if (p.categoryId) {
+    return p.categoryId === c._id;
+  }
+  const a = p.category.trim().toLowerCase();
+  const b = c.name.trim().toLowerCase();
+  return a.length > 0 && a === b;
+}
+
+function sortCategories(list: CategoryDTO[]): CategoryDTO[] {
+  return [...list].sort(
+    (a, b) =>
+      (a.sortOrder ?? 0) - (b.sortOrder ?? 0) ||
+      a.name.localeCompare(b.name)
+  );
 }
 
 export function MenuView() {
@@ -58,13 +79,9 @@ export function MenuView() {
     setLoading(true);
     setError(null);
     try {
-      const [p, c, s] = await Promise.all([
-        fetchProducts(),
-        fetchCategories(),
-        fetchSettings(),
-      ]);
-      setProducts(p);
-      setCategories(c);
+      const [menu, s] = await Promise.all([fetchMenu(), fetchSettings()]);
+      setProducts(menu.products);
+      setCategories(menu.categories);
       setHeroImages(s.heroImages);
     } catch {
       setError("Could not load menu. Check MongoDB connection.");
@@ -77,11 +94,20 @@ export function MenuView() {
     load();
   }, [load]);
 
-  const orderIndex = useMemo(() => {
-    const m = new Map<string, number>();
-    categories.forEach((c) => m.set(c.name, c.sortOrder));
-    return m;
-  }, [categories]);
+  /** Refetch when user comes back from another tab (e.g. admin) so names always match DB */
+  useEffect(() => {
+    let wasHidden = false;
+    const onVis = () => {
+      if (document.visibilityState === "hidden") {
+        wasHidden = true;
+      } else if (document.visibilityState === "visible" && wasHidden) {
+        wasHidden = false;
+        void load();
+      }
+    };
+    document.addEventListener("visibilitychange", onVis);
+    return () => document.removeEventListener("visibilitychange", onVis);
+  }, [load]);
 
   const filteredProducts = useMemo(() => {
     const q = dishSearch.trim().toLowerCase();
@@ -94,39 +120,100 @@ export function MenuView() {
     );
   }, [products, dishSearch]);
 
-  const grouped = useMemo(() => {
-    const map = new Map<string, ProductDTO[]>();
-    for (const pr of filteredProducts) {
-      const c = pr.category?.trim() || "Other";
-      if (!map.has(c)) map.set(c, []);
-      map.get(c)!.push(pr);
+  /**
+   * Section titles + order come from admin Categories — not from stale product.category strings.
+   */
+  const orderedSections = useMemo(() => {
+    type Section = {
+      listKey: string;
+      sectionId: string;
+      /** Label for horizontal chips (no count). */
+      chipLabel: string;
+      title: string;
+      items: ProductDTO[];
+    };
+
+    if (categories.length === 0) {
+      const map = new Map<string, ProductDTO[]>();
+      for (const pr of filteredProducts) {
+        const key = pr.category?.trim() || "Other";
+        if (!map.has(key)) map.set(key, []);
+        map.get(key)!.push(pr);
+      }
+      return [...map.entries()]
+        .sort((a, b) => a[0].localeCompare(b[0]))
+        .map(([name, items]) => ({
+          listKey: slugify(name) || name,
+          sectionId: slugify(name),
+          chipLabel: name,
+          title: `${name.toUpperCase()} (${items.length})`,
+          items,
+        }));
     }
-    return [...map.entries()].sort((a, b) => {
-      const ao = orderIndex.get(a[0]) ?? 500 + a[0].charCodeAt(0);
-      const bo = orderIndex.get(b[0]) ?? 500 + b[0].charCodeAt(0);
-      if (ao !== bo) return ao - bo;
-      return a[0].localeCompare(b[0]);
-    });
-  }, [filteredProducts, orderIndex]);
+
+    const sorted = sortCategories(categories);
+    const used = new Set<string>();
+    const sections: Section[] = [];
+
+    for (const c of sorted) {
+      const items = filteredProducts.filter((p) => productInCategory(p, c));
+      if (items.length === 0) continue;
+      items.forEach((p) => used.add(p._id));
+      sections.push({
+        listKey: c._id,
+        sectionId: sectionDomId(c._id),
+        chipLabel: c.name,
+        title: `${c.name.toUpperCase()} (${items.length})`,
+        items,
+      });
+    }
+
+    const orphan = filteredProducts.filter((p) => !used.has(p._id));
+    if (orphan.length > 0) {
+      const map = new Map<string, ProductDTO[]>();
+      for (const pr of orphan) {
+        const key = pr.category?.trim() || "Other";
+        if (!map.has(key)) map.set(key, []);
+        map.get(key)!.push(pr);
+      }
+      for (const [name, items] of [...map.entries()].sort((a, b) =>
+        a[0].localeCompare(b[0])
+      )) {
+        const slug = slugify(name) || "other";
+        sections.push({
+          listKey: `orphan-${slug}-${items[0]?._id ?? name}`,
+          sectionId: `orphan-${slug}-${items[0]?._id ?? "x"}`,
+          chipLabel: name,
+          title: `${name.toUpperCase()} (${items.length})`,
+          items,
+        });
+      }
+    }
+
+    return sections;
+  }, [categories, filteredProducts]);
 
   const filterItems = useMemo(() => {
-    const fromDb = categories.map((c) => {
-      const count = products.filter((p) => p.category === c.name).length;
+    if (categories.length === 0) {
+      return orderedSections.map((s) => ({
+        listKey: s.listKey,
+        id: s.sectionId,
+        name: s.chipLabel,
+        count: s.items.length,
+        image: "",
+      }));
+    }
+    return sortCategories(categories).map((c) => {
+      const count = products.filter((p) => productInCategory(p, c)).length;
       return {
-        id: slugify(c.name),
+        listKey: c._id,
+        id: sectionDomId(c._id),
         name: c.name,
         count,
         image: c.image,
       };
     });
-    if (fromDb.length) return fromDb;
-    return grouped.map(([name, items]) => ({
-      id: slugify(name),
-      name,
-      count: items.length,
-      image: "",
-    }));
-  }, [categories, products, grouped]);
+  }, [categories, products, orderedSections]);
 
   const handleRequestCheckout = () => {
     if (!lines.length) return;
@@ -226,7 +313,7 @@ export function MenuView() {
           <div className="flex min-w-min gap-1 px-1 sm:gap-2 sm:px-1.5 md:gap-2.5">
             {filterItems.map((item) => (
               <button
-                key={item.id}
+                key={item.listKey}
                 type="button"
                 onClick={() => scrollToSection(item.id)}
                 className="flex min-w-36 max-w-48 shrink-0 items-center gap-1 rounded-lg border border-white/80 bg-white px-2 py-1.5 text-left shadow-[0_5px_20px_-10px_rgba(0,0,0,0.12)] transition hover:-translate-y-0.5 hover:shadow-[0_8px_26px_-10px_rgba(230,0,0,0.16)] sm:min-w-44 sm:max-w-52 sm:gap-1.5 sm:rounded-xl sm:px-2.5 sm:py-2 md:gap-2 md:min-w-48"
@@ -262,21 +349,21 @@ export function MenuView() {
           <p className="py-20 text-center text-red-600">{error}</p>
         )}
 
-        {!loading && !error && grouped.length === 0 && dishSearch.trim() && (
+        {!loading && !error && orderedSections.length === 0 && dishSearch.trim() && (
           <p className="py-12 text-center font-body text-sm text-neutral-500">
             No dishes match &ldquo;{dishSearch.trim()}&rdquo;. Try another name.
           </p>
         )}
 
-        {!loading && !error && grouped.length > 0 && (
+        {!loading && !error && orderedSections.length > 0 && (
           <div className="flex flex-col gap-5 sm:gap-7 md:gap-9">
-            {grouped.map(([name, items]) => (
+            {orderedSections.map((sec) => (
               <CategorySection
-                key={name}
-                id={slugify(name)}
-                title={`${name.toUpperCase()} (${items.length})`}
+                key={sec.listKey}
+                id={sec.sectionId}
+                title={sec.title}
               >
-                {items.map((p) => (
+                {sec.items.map((p) => (
                   <ProductCard
                     key={p._id}
                     product={p}

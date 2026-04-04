@@ -1,14 +1,11 @@
 import type { CategoryDTO } from "@/types";
 import { http } from "./http";
-import { getCache, setCache } from "@/lib/cache";
 
 export async function fetchCategories(): Promise<CategoryDTO[]> {
-  const cacheKey = 'categories';
-  const cached = getCache<CategoryDTO[]>(cacheKey);
-  if (cached) return cached;
-  
-  const { data } = await http.get<CategoryDTO[]>("/api/categories");
-  setCache(cacheKey, data, 120); // Cache for 120 seconds
+  const { data } = await http.get<CategoryDTO[]>("/api/categories", {
+    params: { _t: Date.now() },
+    headers: { "Cache-Control": "no-cache", Pragma: "no-cache" },
+  });
   return data;
 }
 

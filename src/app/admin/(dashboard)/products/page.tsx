@@ -20,6 +20,7 @@ const emptyForm = {
   description: "",
   price: "",
   category: "",
+  categoryId: "",
   image: "",
   isVeg: true,
   variants: [] as VariantRow[],
@@ -82,7 +83,7 @@ export default function AdminProductsPage() {
         ? Math.min(...normalizedVariants.map((v) => v.price))
         : basePrice;
 
-    if (!form.name.trim() || !form.category.trim()) {
+    if (!form.name.trim() || !form.categoryId.trim()) {
       setMsg("Name and category are required.");
       return;
     }
@@ -97,6 +98,7 @@ export default function AdminProductsPage() {
         description: form.description.trim(),
         price,
         category: form.category.trim(),
+        categoryId: form.categoryId.trim(),
         image: form.image.trim(),
         isVeg: form.isVeg,
         variants: normalizedVariants,
@@ -117,11 +119,16 @@ export default function AdminProductsPage() {
 
   const startEdit = (p: ProductDTO) => {
     setEditingId(p._id);
+    const matchedId =
+      p.categoryId ??
+      categories.find((c) => c.name === p.category)?._id ??
+      "";
     setForm({
       name: p.name,
       description: p.description,
       price: String(p.price),
       category: p.category,
+      categoryId: matchedId,
       image: p.image,
       isVeg: p.isVeg,
       variants:
@@ -282,12 +289,20 @@ export default function AdminProductsPage() {
             <select
               required
               className="mt-1 w-full rounded-xl border px-3 py-2 text-sm"
-              value={form.category}
-              onChange={(e) => setForm({ ...form, category: e.target.value })}
+              value={form.categoryId}
+              onChange={(e) => {
+                const id = e.target.value;
+                const cat = categories.find((c) => c._id === id);
+                setForm({
+                  ...form,
+                  categoryId: id,
+                  category: cat?.name ?? "",
+                });
+              }}
             >
               <option value="">Select…</option>
               {categories.map((c) => (
-                <option key={c._id} value={c.name}>
+                <option key={c._id} value={c._id}>
                   {c.name}
                 </option>
               ))}

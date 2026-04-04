@@ -1,3 +1,5 @@
+import mongoose from "mongoose";
+import { Category } from "@/lib/models/Category";
 import type { ProductVariantItem } from "@/types";
 
 export function normalizeVariants(raw: unknown): ProductVariantItem[] {
@@ -23,6 +25,48 @@ export type SanitizedProductBody = {
   isVeg: boolean;
   variants: ProductVariantItem[];
 };
+
+export type SanitizedProductWrite = SanitizedProductBody & {
+  categoryId?: mongoose.Types.ObjectId;
+};
+
+/**
+ * Resolves category string + optional categoryId from admin payload.
+ * When categoryId is sent, category name always comes from the Category document (stays in sync on rename).
+ */
+export async function resolveProductWrite(
+  body: Record<string, unknown>
+): Promise<SanitizedProductWrite | null> {
+  const parsed = sanitizeProductBody(body);
+  if (!parsed) return null;
+
+  const rawId = body.categoryId;
+  if (
+    typeof rawId === "string" &&
+    rawId.length > 0 &&
+    mongoose.Types.ObjectId.isValid(rawId)
+  ) {
+    const cat = await Category.findById(rawId).lean();
+    if (!cat) return null;
+    return {
+      ...parsed,
+      category: cat.name,
+      categoryId: cat._id as mongoose.Types.ObjectId,
+    };
+  }
+
+  const catByName = await Category.findOne({
+    name: parsed.category,
+  }).lean();
+  if (catByName) {
+    return {
+      ...parsed,
+      categoryId: catByName._id as mongoose.Types.ObjectId,
+    };
+  }
+
+  return { ...parsed };
+}
 
 export function sanitizeProductBody(body: Record<string, unknown>): SanitizedProductBody | null {
   const name = typeof body.name === "string" ? body.name.trim() : "";

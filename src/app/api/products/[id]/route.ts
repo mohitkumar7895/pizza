@@ -4,7 +4,7 @@ import { connectDB } from "@/lib/mongodb";
 import { Product } from "@/lib/models/Product";
 import { adminJsonResponse, isAdminSession } from "@/lib/admin-auth";
 import { toProductDTO } from "@/lib/product-dto";
-import { sanitizeProductBody } from "@/lib/product-payload";
+import { resolveProductWrite } from "@/lib/product-payload";
 
 type Params = { params: Promise<{ id: string }> };
 
@@ -15,7 +15,9 @@ export async function GET(_request: Request, { params }: Params) {
       return NextResponse.json({ error: "Invalid id" }, { status: 400 });
     }
     await connectDB();
-    const doc = await Product.findById(id).lean();
+    const doc = await Product.findById(id)
+      .populate({ path: "categoryId", select: "name" })
+      .lean();
     if (!doc) return NextResponse.json({ error: "Not found" }, { status: 404 });
     return NextResponse.json(
       toProductDTO({
@@ -41,7 +43,7 @@ export async function PUT(request: Request, { params }: Params) {
     }
     await connectDB();
     const body = (await request.json()) as Record<string, unknown>;
-    const parsed = sanitizeProductBody(body);
+    const parsed = await resolveProductWrite(body);
     if (!parsed) {
       return NextResponse.json(
         { error: "Invalid product data" },
@@ -51,9 +53,17 @@ export async function PUT(request: Request, { params }: Params) {
     const doc = await Product.findByIdAndUpdate(id, parsed, {
       new: true,
       runValidators: true,
-    });
+    })
+      .populate({ path: "categoryId", select: "name" })
+      .lean();
     if (!doc) return NextResponse.json({ error: "Not found" }, { status: 404 });
-    return NextResponse.json(toProductDTO(doc.toObject()));
+    return NextResponse.json(
+      toProductDTO({
+        ...doc,
+        _id: doc._id as mongoose.Types.ObjectId,
+        variants: doc.variants as { label: string; price: number }[] | undefined,
+      })
+    );
   } catch (e) {
     console.error(e);
     return NextResponse.json({ error: "Failed to update" }, { status: 500 });

@@ -3,7 +3,7 @@ import { connectDB } from "@/lib/mongodb";
 import { Product } from "@/lib/models/Product";
 import { adminJsonResponse, isAdminSession } from "@/lib/admin-auth";
 import { toProductDTO } from "@/lib/product-dto";
-import { sanitizeProductBody } from "@/lib/product-payload";
+import { resolveProductWrite } from "@/lib/product-payload";
 
 export async function GET(request: Request) {
   try {
@@ -11,7 +11,10 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const category = searchParams.get("category");
     const filter = category ? { category } : {};
-    const docs = await Product.find(filter).sort({ createdAt: 1 }).lean();
+    const docs = await Product.find(filter)
+      .populate({ path: "categoryId", select: "name" })
+      .sort({ createdAt: 1 })
+      .lean();
     const products = docs.map((d) =>
       toProductDTO({
         ...d,
@@ -20,7 +23,10 @@ export async function GET(request: Request) {
       })
     );
     const response = NextResponse.json(products);
-    response.headers.set('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=120');
+    response.headers.set(
+      "Cache-Control",
+      "private, no-store, must-revalidate"
+    );
     return response;
   } catch (e) {
     console.error(e);
@@ -38,7 +44,7 @@ export async function POST(request: Request) {
   try {
     await connectDB();
     const body = (await request.json()) as Record<string, unknown>;
-    const parsed = sanitizeProductBody(body);
+    const parsed = await resolveProductWrite(body);
     if (!parsed) {
       return NextResponse.json(
         { error: "name, category, and valid price (or types with prices) required" },

@@ -13,6 +13,12 @@ const productSchema = new Schema(
     name: { type: String, required: true, trim: true },
     description: { type: String, default: "" },
     price: { type: Number, required: true, min: 0 },
+    /** Links to Category — API returns current category name from this ref when set */
+    categoryId: {
+      type: Schema.Types.ObjectId,
+      ref: "Category",
+      default: null,
+    },
     category: { type: String, required: true, trim: true },
     image: { type: String, default: "" },
     isVeg: { type: Boolean, default: true },
