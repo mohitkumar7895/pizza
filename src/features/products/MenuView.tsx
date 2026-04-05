@@ -358,7 +358,7 @@ export function MenuView() {
 
   if (loading) {
     return (
-      <div className="relative flex min-h-dvh flex-col bg-[#faf8f5]">
+      <div className="relative flex min-h-dvh flex-col overflow-x-hidden bg-[#faf8f5]">
         <Navbar onCartClick={() => setCartOpen(true)} />
         <main className="mx-auto w-full max-w-6xl flex-1 px-2.5 py-2 sm:px-3 sm:py-3 md:px-6 md:py-4 flex flex-col items-center justify-center">
           <div className="flex flex-col items-center gap-4">
@@ -374,7 +374,7 @@ export function MenuView() {
   }
 
   return (
-    <div className="relative flex min-h-dvh flex-col bg-[#faf8f5]">
+    <div className="relative flex min-h-dvh flex-col overflow-x-hidden bg-[#faf8f5]">
       <Navbar onCartClick={() => setCartOpen(true)} />
 
       <main className="mx-auto w-full max-w-6xl flex-1 px-2.5 py-2 sm:px-3 sm:py-3 md:px-6 md:py-4 flex flex-col">

@@ -99,7 +99,7 @@ export function Navbar({ onCartClick }: { onCartClick?: () => void }) {
         <div className="flex shrink-0 items-center gap-1.5 sm:gap-2.5">
           {!ready ? (
             <span
-              className="inline-flex h-8 w-[4.75rem] shrink-0 animate-pulse rounded-full bg-neutral-200 sm:h-9 md:h-10"
+              className="inline-flex h-8 w-19 shrink-0 animate-pulse rounded-full bg-neutral-200 sm:h-9 md:h-10"
               aria-hidden
             />
           ) : callPhone ? (
