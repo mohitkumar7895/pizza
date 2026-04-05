@@ -1,6 +1,13 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Search } from "lucide-react";
@@ -49,6 +56,9 @@ function sortCategories(list: CategoryDTO[]): CategoryDTO[] {
   );
 }
 
+/** Min categories to enable seamless horizontal loop (circular scroll). */
+const CATEGORY_STRIP_LOOP_MIN = 2;
+
 export function MenuView() {
   const [products, setProducts] = useState<ProductDTO[]>([]);
   const [categories, setCategories] = useState<CategoryDTO[]>([]);
@@ -74,6 +84,29 @@ export function MenuView() {
   const router = useRouter();
   const { lines, clear, subtotal } = useCart();
   const scrollToSection = useScrollToSection();
+  const categoryStripRef = useRef<HTMLDivElement>(null);
+  const categoryInnerRef = useRef<HTMLDivElement>(null);
+  const categoryLoopJumpingRef = useRef(false);
+  const categoryStripLoopRef = useRef(false);
+
+  useEffect(() => {
+    const el = categoryStripRef.current;
+    if (!el) return;
+    const onWheel = (e: WheelEvent) => {
+      if (el.scrollWidth <= el.clientWidth) return;
+      const useX = Math.abs(e.deltaX) > Math.abs(e.deltaY);
+      const delta = useX ? e.deltaX : e.deltaY;
+      if (delta === 0) return;
+      const max = el.scrollWidth - el.clientWidth;
+      const loop = categoryStripLoopRef.current;
+      if (!loop && delta < 0 && el.scrollLeft <= 0) return;
+      if (!loop && delta > 0 && el.scrollLeft >= max - 0.5) return;
+      el.scrollLeft += delta;
+      e.preventDefault();
+    };
+    el.addEventListener("wheel", onWheel, { passive: false });
+    return () => el.removeEventListener("wheel", onWheel);
+  }, []);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -215,6 +248,66 @@ export function MenuView() {
     });
   }, [categories, products, orderedSections]);
 
+  const categoryStripModel = useMemo(() => {
+    const items = filterItems;
+    if (items.length < CATEGORY_STRIP_LOOP_MIN) {
+      return { loop: false as const, items };
+    }
+    return {
+      loop: true as const,
+      items: [...items, ...items, ...items],
+    };
+  }, [filterItems]);
+
+  useEffect(() => {
+    categoryStripLoopRef.current = categoryStripModel.loop;
+  }, [categoryStripModel.loop]);
+
+  const jumpCategoryLoop = useCallback(() => {
+    if (!categoryStripModel.loop) return;
+    const outer = categoryStripRef.current;
+    const inner = categoryInnerRef.current;
+    if (!outer || !inner || categoryLoopJumpingRef.current) return;
+    const W = inner.scrollWidth / 3;
+    if (W <= 0) return;
+    const x = outer.scrollLeft;
+    if (x < 48) {
+      categoryLoopJumpingRef.current = true;
+      outer.scrollLeft = x + W;
+      categoryLoopJumpingRef.current = false;
+    } else if (x > 2 * W - 48) {
+      categoryLoopJumpingRef.current = true;
+      outer.scrollLeft = x - W;
+      categoryLoopJumpingRef.current = false;
+    }
+  }, [categoryStripModel.loop]);
+
+  useLayoutEffect(() => {
+    const outer = categoryStripRef.current;
+    const inner = categoryInnerRef.current;
+    if (!outer) return;
+    if (!categoryStripModel.loop) {
+      outer.scrollLeft = 0;
+      return;
+    }
+    if (!inner) return;
+    const W = inner.scrollWidth / 3;
+    if (W > 0) outer.scrollLeft = W;
+  }, [categoryStripModel.loop, filterItems]);
+
+  useEffect(() => {
+    if (!categoryStripModel.loop) return;
+    const inner = categoryInnerRef.current;
+    const outer = categoryStripRef.current;
+    if (!inner || !outer) return;
+    const ro = new ResizeObserver(() => {
+      const W = inner.scrollWidth / 3;
+      if (W > 0) outer.scrollLeft = W;
+    });
+    ro.observe(inner);
+    return () => ro.disconnect();
+  }, [categoryStripModel.loop, filterItems]);
+
   const handleRequestCheckout = () => {
     if (!lines.length) return;
     if (subtotal < MIN_ORDER_AMOUNT) {
@@ -309,11 +402,22 @@ export function MenuView() {
           </div>
         </div>
 
-        <div className="mb-2.5 -mx-1 overflow-x-auto pb-0.5 sm:mb-3 md:mb-4 scrollbar-hide">
-          <div className="flex min-w-min gap-1 px-1 sm:gap-2 sm:px-1.5 md:gap-2.5">
-            {filterItems.map((item) => (
+        <div
+          ref={categoryStripRef}
+          onScroll={jumpCategoryLoop}
+          className="mb-2.5 -mx-1 min-w-0 w-full touch-pan-x overflow-x-auto overscroll-x-contain pb-0.5 sm:mb-3 md:mb-4 scrollbar-hide"
+        >
+          <div
+            ref={categoryInnerRef}
+            className="flex w-max min-w-min gap-1 px-1 sm:gap-2 sm:px-1.5 md:gap-2.5"
+          >
+            {categoryStripModel.items.map((item, idx) => (
               <button
-                key={item.listKey}
+                key={
+                  categoryStripModel.loop
+                    ? `${item.listKey}-${idx}`
+                    : item.listKey
+                }
                 type="button"
                 onClick={() => scrollToSection(item.id)}
                 className="flex min-w-36 max-w-48 shrink-0 items-center gap-1 rounded-lg border border-white/80 bg-white px-2 py-1.5 text-left shadow-[0_5px_20px_-10px_rgba(0,0,0,0.12)] transition hover:-translate-y-0.5 hover:shadow-[0_8px_26px_-10px_rgba(230,0,0,0.16)] sm:min-w-44 sm:max-w-52 sm:gap-1.5 sm:rounded-xl sm:px-2.5 sm:py-2 md:gap-2 md:min-w-48"

@@ -46,9 +46,3 @@ body {
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
-
-/* Remove space reserved for scrollbar */
-.scrollbar-hide {
-  overflow: -moz-scrollbars-vertical;
-  overflow-y: scroll;
-}

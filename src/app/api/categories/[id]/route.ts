@@ -69,9 +69,20 @@ export async function DELETE(_request: Request, { params }: Params) {
       return NextResponse.json({ error: "Invalid id" }, { status: 400 });
     }
     await connectDB();
-    const doc = await Category.findByIdAndDelete(id);
-    if (!doc) return NextResponse.json({ error: "Not found" }, { status: 404 });
-    return NextResponse.json({ ok: true });
+    const existing = await Category.findById(id).lean();
+    if (!existing) return NextResponse.json({ error: "Not found" }, { status: 404 });
+
+    const oid = new mongoose.Types.ObjectId(id);
+    const name = String(existing.name).trim();
+    const productResult = await Product.deleteMany({
+      $or: [{ categoryId: oid }, { category: name }, { category: existing.name }],
+    });
+
+    await Category.findByIdAndDelete(id);
+    return NextResponse.json({
+      ok: true,
+      productsDeleted: productResult.deletedCount,
+    });
   } catch (e) {
     console.error(e);
     return NextResponse.json({ error: "Failed to delete" }, { status: 500 });

@@ -82,10 +82,21 @@ export default function AdminCategoriesPage() {
     setImage(c.image);
   };
 
-  const onDelete = async (id: string) => {
-    if (!confirm("Delete this category?")) return;
+  const onDelete = async (c: CategoryDTO) => {
+    if (
+      !confirm(
+        `Delete category "${c.name}"?\n\nAll products in this category will be permanently deleted.`
+      )
+    ) {
+      return;
+    }
     try {
-      await deleteCategory(id);
+      const { productsDeleted } = await deleteCategory(c._id);
+      setMsg(
+        productsDeleted > 0
+          ? `Category deleted. ${productsDeleted} product(s) removed.`
+          : "Category deleted."
+      );
       load();
     } catch {
       setMsg("Delete failed.");
@@ -243,7 +254,7 @@ export default function AdminCategoriesPage() {
                     <button
                       type="button"
                       className="text-red-600 hover:underline"
-                      onClick={() => onDelete(c._id)}
+                      onClick={() => onDelete(c)}
                     >
                       Delete
                     </button>

@@ -26,6 +26,15 @@ export async function updateCategory(
   return data;
 }
 
-export async function deleteCategory(id: string): Promise<void> {
-  await http.delete(`/api/categories/${id}`);
+export type DeleteCategoryResult = {
+  ok: boolean;
+  productsDeleted: number;
+};
+
+export async function deleteCategory(id: string): Promise<DeleteCategoryResult> {
+  const { data } = await http.delete<DeleteCategoryResult>(`/api/categories/${id}`);
+  return {
+    ok: data.ok,
+    productsDeleted: data.productsDeleted ?? 0,
+  };
 }

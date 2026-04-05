@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { ShoppingCart, Phone } from "lucide-react";
 import { useCart } from "@/features/cart/cart-context";
@@ -17,14 +18,27 @@ export function Navbar({ onCartClick }: { onCartClick?: () => void }) {
       <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-2 px-3 py-1 sm:gap-3 sm:px-5 sm:py-2">
         <Link
           href="/"
-          className="group min-w-0 outline-none focus-visible:ring-2 focus-visible:ring-[#D30000]/35 focus-visible:ring-offset-2"
+          className="group flex min-w-0 items-center gap-2 outline-none focus-visible:ring-2 focus-visible:ring-[#D30000]/35 focus-visible:ring-offset-2 sm:gap-2.5"
         >
-          <p className="font-navbar-brand text-[clamp(1.05rem,3.4vw,1.55rem)] font-semibold leading-none tracking-tight text-[#D30000] transition-transform duration-200 group-hover:scale-[1.02] sm:text-[clamp(1.15rem,3.6vw,1.72rem)] sm:font-bold">
-            Ad Pizza Hub
-          </p>
-          <p className="font-navbar-hindi mt-px max-w-52.5 text-[9px] font-semibold leading-tight text-[#008000] sm:mt-0.5 sm:max-w-none sm:text-[11px] sm:leading-snug">
-            आपका अपना रेस्टोरेंट सैफई
-          </p>
+          <span className="relative h-9 w-9 shrink-0 overflow-hidden rounded-full bg-[#faf8f5] ring-2 ring-[#D30000]/20 sm:h-10 sm:w-10">
+            <Image
+              src="/favicon.ico"
+              alt=""
+              fill
+              className="object-cover"
+              sizes="40px"
+              priority
+              unoptimized
+            />
+          </span>
+          <span className="min-w-0">
+            <p className="font-navbar-brand text-[clamp(1.05rem,3.4vw,1.55rem)] font-semibold leading-none tracking-tight text-[#D30000] transition-transform duration-200 group-hover:scale-[1.02] sm:text-[clamp(1.15rem,3.6vw,1.72rem)] sm:font-bold">
+              Ad Pizza Hub
+            </p>
+            <p className="font-navbar-hindi mt-px max-w-52.5 text-[9px] font-semibold leading-tight text-[#008000] sm:mt-0.5 sm:max-w-none sm:text-[11px] sm:leading-snug">
+              आपका अपना रेस्टोरेंट सैफई
+            </p>
+          </span>
         </Link>
 
         <div className="flex shrink-0 items-center gap-1.5 sm:gap-2.5">
