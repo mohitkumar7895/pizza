@@ -52,7 +52,10 @@ export async function GET() {
     await connectDB();
     const doc = await SiteSettings.findOne({ key: KEY }).lean();
     const response = NextResponse.json(fromDoc(doc));
-    response.headers.set('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=120');
+    response.headers.set(
+      "Cache-Control",
+      "private, no-store, must-revalidate"
+    );
     return response;
   } catch (e) {
     console.error(e);

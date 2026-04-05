@@ -1,5 +1,4 @@
 import { http } from "./http";
-import { getCache, setCache } from "@/lib/cache";
 
 export type SiteSettingsDTO = {
   heroImages: [string, string, string];
@@ -27,14 +26,10 @@ function normalizeResponse(data: Record<string, unknown>): SiteSettingsDTO {
 }
 
 export async function fetchSettings(): Promise<SiteSettingsDTO> {
-  const cacheKey = 'settings';
-  const cached = getCache<SiteSettingsDTO>(cacheKey);
-  if (cached) return cached;
-  
-  const { data } = await http.get<Record<string, unknown>>("/api/settings");
-  const normalized = normalizeResponse(data);
-  setCache(cacheKey, normalized, 60); // Cache for 60 seconds
-  return normalized;
+  const { data } = await http.get<Record<string, unknown>>("/api/settings", {
+    headers: { "Cache-Control": "no-cache" },
+  });
+  return normalizeResponse(data);
 }
 
 export async function updateSettings(

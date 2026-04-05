@@ -9,12 +9,14 @@ import {
   FolderTree,
   Receipt,
   Images,
+  PanelTop,
 } from "lucide-react";
 import { AdminLogoutButton } from "@/components/layout/AdminLogoutButton";
 
 const nav = [
   { href: "/admin", label: "Overview", icon: LayoutDashboard },
-  { href: "/admin/settings", label: "Banners", icon: Images },
+  { href: "/admin/navbar", label: "Navbar", icon: PanelTop },
+  { href: "/admin/settings", label: "Site", icon: Images },
   { href: "/admin/categories", label: "Categories", icon: FolderTree },
   { href: "/admin/products", label: "Products", icon: Package },
   { href: "/admin/orders", label: "Orders", icon: Receipt },

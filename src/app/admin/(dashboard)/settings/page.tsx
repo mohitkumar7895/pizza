@@ -106,8 +106,8 @@ export default function AdminSettingsPage() {
       <div>
         <h1 className="text-xl sm:text-2xl font-bold">Site settings</h1>
         <p className="mt-1 sm:mt-2 text-xs sm:text-sm text-neutral-600">
-          Banners, outlet details, and payment QR — all configured here. The order tracking
-          page uses these values.
+          Hero banners, outlet details, and payment QR. The menu navbar is edited under{" "}
+          <span className="font-semibold text-neutral-800">Navbar</span> in the sidebar.
         </p>
       </div>
 
